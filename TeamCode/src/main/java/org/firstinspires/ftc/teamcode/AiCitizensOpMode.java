@@ -79,6 +79,8 @@ public class AiCitizensOpMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        double movePrecision = 0.0;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
@@ -89,12 +91,21 @@ public class AiCitizensOpMode extends LinearOpMode {
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
+            // Move Precision increases as you press the dpad up and decreases as you press dpad down
+            if (gamepad1.dpad_down) {
+                movePrecision = movePrecision - 0.2;
+            }
+
+            if (gamepad1.dpad_up) {
+                movePrecision = movePrecision + 0.2;
+            }
+
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            leftPower    = Range.clip(drive + turn - movePrecision, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn - movePrecision, -1.0, 1.0) ;
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
