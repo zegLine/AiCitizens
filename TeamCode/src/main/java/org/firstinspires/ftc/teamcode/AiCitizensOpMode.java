@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -59,6 +61,11 @@ public class AiCitizensOpMode extends LinearOpMode {
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
 
+    private DcMotor armDrive = null;
+
+    private Servo leftServo = null;
+    private Servo rightServo = null;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -70,10 +77,20 @@ public class AiCitizensOpMode extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
+        armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
+
+        leftServo = hardwareMap.get(Servo.class, "left_servo");
+        rightServo = hardwareMap.get(Servo.class, "right_servo");
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        armDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        leftServo.setDirection(Servo.Direction.FORWARD);
+        rightServo.setDirection(Servo.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -88,17 +105,17 @@ public class AiCitizensOpMode extends LinearOpMode {
             double leftPower;
             double rightPower;
 
+            double armPower;
+
+            double servoPosition;
+
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // Move Precision increases as you press the dpad up and decreases as you press dpad down
-            if (gamepad1.dpad_down) {
-                movePrecision = movePrecision - 0.2;
-            }
+            if (gamepad1.dpad_down) movePrecision = movePrecision - 0.2;
 
-            if (gamepad1.dpad_up) {
-                movePrecision = movePrecision + 0.2;
-            }
+            if (gamepad1.dpad_up) movePrecision = movePrecision + 0.2;
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
@@ -106,6 +123,12 @@ public class AiCitizensOpMode extends LinearOpMode {
             double turn  =  gamepad1.right_stick_x;
             leftPower    = Range.clip(drive + turn - movePrecision, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn - movePrecision, -1.0, 1.0) ;
+
+            double arm = gamepad2.left_stick_y;
+            armPower = Range.clip(arm, -0.5, 0.5);
+
+            double servoInput = gamepad2.right_stick_x;
+            servoPosition = Range.clip(servoInput, 0.0, 0.5);
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -115,6 +138,11 @@ public class AiCitizensOpMode extends LinearOpMode {
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
+
+            armDrive.setPower(armPower);
+
+            leftServo.setPosition(servoPosition);
+            rightServo.setPosition(servoPosition);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
