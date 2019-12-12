@@ -72,11 +72,7 @@ public class TeleTestOpMode extends LinearOpMode {
     private Servo leftServo = null;
     private Servo rightServo = null;
 
-    @Override
-    public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
+    public void initializeAll() {
         // Initialize motors
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
@@ -84,13 +80,13 @@ public class TeleTestOpMode extends LinearOpMode {
         // Initialize the arm drive
         armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
 
+        // Initialize the claw drive
         clawDrive = hardwareMap.get(DcMotor.class, "claw_drive");
 
+        // Initialize the claw servos
         leftServo = hardwareMap.get(Servo.class, "left_servo");
         rightServo = hardwareMap.get(Servo.class, "right_servo");
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -103,6 +99,15 @@ public class TeleTestOpMode extends LinearOpMode {
 
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
+    }
+
+    @Override
+    public void runOpMode() {
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        initializeAll();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -136,7 +141,7 @@ public class TeleTestOpMode extends LinearOpMode {
             armPower = Range.clip(arm, -0.5, 0.5);
 
             double claw = gamepad2.right_stick_x;
-            clawPower = Range.clip(claw, -1, 1);
+            clawPower = Range.clip(claw, -0.5, 0.5);
 
             boolean servoInputUp = gamepad2.right_bumper;
             boolean servoInputDown = gamepad2.left_bumper;
@@ -144,11 +149,12 @@ public class TeleTestOpMode extends LinearOpMode {
             if (servoInputUp) {
                 leftServo.setPosition(servoPosition + 1);
                 rightServo.setPosition(-(servoPosition + 1));
-            }
-
-            if (servoInputDown) {
+            } else if (servoInputDown) {
                 leftServo.setPosition(servoPosition - 1);
-                rightServo.setPosition(-(servoPosition - 1));
+                rightServo.setPosition(servoPosition - 1);
+            } else {
+                leftServo.setPosition(0);
+                rightServo.setPosition(0);
             }
 
             // Send calculated power to wheels
