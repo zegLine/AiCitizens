@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -64,6 +65,9 @@ public class TeleTestOpMode extends LinearOpMode {
     // Arm motor
     private DcMotor armDrive = null;
 
+    // Claw HEX motor
+    private DcMotor clawDrive = null;
+
     // Claw servos
     private Servo leftServo = null;
     private Servo rightServo = null;
@@ -80,6 +84,8 @@ public class TeleTestOpMode extends LinearOpMode {
         // Initialize the arm drive
         armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
 
+        clawDrive = hardwareMap.get(DcMotor.class, "claw_drive");
+
         leftServo = hardwareMap.get(Servo.class, "left_servo");
         rightServo = hardwareMap.get(Servo.class, "right_servo");
 
@@ -89,6 +95,8 @@ public class TeleTestOpMode extends LinearOpMode {
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         armDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        clawDrive.setDirection(DcMotor.Direction.FORWARD);
 
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
@@ -112,6 +120,8 @@ public class TeleTestOpMode extends LinearOpMode {
 
             double armPower;
 
+            double clawPower;
+
             if (gamepad1.x) {
                 if (movePrecision == 1) movePrecision = 2.0; else movePrecision = 1.0;
             }
@@ -124,6 +134,9 @@ public class TeleTestOpMode extends LinearOpMode {
 
             double arm = gamepad2.left_stick_y;
             armPower = Range.clip(arm, -0.5, 0.5);
+
+            double claw = gamepad2.right_stick_x;
+            clawPower = Range.clip(claw, -1, 1);
 
             boolean servoInputUp = gamepad2.right_bumper;
             boolean servoInputDown = gamepad2.left_bumper;
@@ -143,6 +156,8 @@ public class TeleTestOpMode extends LinearOpMode {
             rightDrive.setPower(rightPower);
 
             armDrive.setPower(armPower);
+
+            clawDrive.setPower(clawPower);
 
             double readServo = leftServo.getPosition();
 
