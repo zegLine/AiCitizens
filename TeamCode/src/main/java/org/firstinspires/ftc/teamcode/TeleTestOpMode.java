@@ -94,8 +94,8 @@ public class TeleTestOpMode extends LinearOpMode {
 
         clawDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        leftServo.setDirection(Servo.Direction.REVERSE);
-        rightServo.setDirection(Servo.Direction.FORWARD);
+        leftServo.setDirection(Servo.Direction.FORWARD);
+        rightServo.setDirection(Servo.Direction.REVERSE);
 
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
@@ -133,7 +133,7 @@ public class TeleTestOpMode extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
+            double turn  = -gamepad1.right_stick_x;
             leftPower    = Range.clip(( drive + turn ) / movePrecision, -1.0, 1.0) ;
             rightPower   = Range.clip(( drive - turn ) / movePrecision, -1.0, 1.0) ;
 
