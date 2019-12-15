@@ -90,12 +90,12 @@ public class TeleTestOpMode extends LinearOpMode {
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        armDrive.setDirection(DcMotor.Direction.REVERSE);
+        armDrive.setDirection(DcMotor.Direction.FORWARD);
 
         clawDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        leftServo.setDirection(Servo.Direction.FORWARD);
-        rightServo.setDirection(Servo.Direction.REVERSE);
+        leftServo.setDirection(Servo.Direction.REVERSE);
+        rightServo.setDirection(Servo.Direction.FORWARD);
 
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
@@ -141,37 +141,51 @@ public class TeleTestOpMode extends LinearOpMode {
             armPower = Range.clip(arm, -0.5, 0.5);
 
             double claw = gamepad2.right_stick_x;
-            clawPower = Range.clip(claw, -0.5, 0.5);
+            clawPower = Range.clip(claw, -0.2, 0.2) / 2;
+
+            // Adjust claw power if direction is down
+            if (clawPower < 0) clawPower = clawPower / 2.5;
 
             boolean servoInputUp = gamepad2.right_bumper;
             boolean servoInputDown = gamepad2.left_bumper;
 
             if (servoInputUp) {
-                leftServo.setPosition(servoPosition + 1);
-                rightServo.setPosition(-(servoPosition + 1));
-            } else if (servoInputDown) {
-                leftServo.setPosition(servoPosition - 1);
-                rightServo.setPosition(servoPosition - 1);
-            } else {
                 leftServo.setPosition(0);
                 rightServo.setPosition(0);
+            } else if (servoInputDown) {
+                leftServo.setPosition(1);
+                rightServo.setPosition(1);
+            } else {
+                leftServo.setPosition(0.5);
+                rightServo.setPosition(0.5);
             }
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
 
+            //Fix mechanical flaw aka arm going down
+            if (armPower == 0) armPower = -0.01;
+
             armDrive.setPower(armPower);
+
+            if (clawPower == 0) clawPower = +0.01;
 
             clawDrive.setPower(clawPower);
 
-            double readServo = leftServo.getPosition();
+            double readServoLeft = leftServo.getPosition();
+            double readServoRight = rightServo.getPosition();
 
             // Show telemetry info
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-            telemetry.addData("Servos", "(%.2f)", servoPosition);
-            telemetry.addData("Servo read", "(%.2f)", readServo);
+
+            // telemetry.addData("Servos", "(%.2f)", servoPosition);
+            // telemetry.addData("Servo read", "(%.2f)", readServoLeft);
+            // telemetry.addData("Servo read", "(%.2f)", readServoRight);
+
+            telemetry.addData("Arm", "(%.2f)", armPower);
+
             telemetry.update();
         }
     }
