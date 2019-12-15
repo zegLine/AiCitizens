@@ -141,7 +141,7 @@ public class TeleTestOpMode extends LinearOpMode {
             armPower = Range.clip(arm, -0.5, 0.5);
 
             double claw = gamepad2.right_stick_x;
-            clawPower = Range.clip(claw, -0.2, 0.2) / 2;
+            clawPower = Range.clip(claw, -0.3, 0.3);
 
             // Adjust claw power if direction is down
             if (clawPower < 0) clawPower = clawPower / 2.5;
