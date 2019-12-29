@@ -72,7 +72,12 @@ public class TeleTestOpMode extends LinearOpMode {
     private Servo leftServo = null;
     private Servo rightServo = null;
 
+    // Low arm servos
+    private Servo lowArmBottomServo = null;
+    private Servo lowArmHighServo = null;
+
     public void initializeAll() {
+
         // Initialize motors
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
@@ -87,6 +92,10 @@ public class TeleTestOpMode extends LinearOpMode {
         leftServo = hardwareMap.get(Servo.class, "left_servo");
         rightServo = hardwareMap.get(Servo.class, "right_servo");
 
+        // Initialize the low (bottom) arm
+        lowArmBottomServo = hardwareMap.get(Servo.class, "low_arm_bottom_servo");
+        lowArmHighServo = hardwareMap.get(Servo.class, "low_arm_high_servo");
+
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -97,8 +106,14 @@ public class TeleTestOpMode extends LinearOpMode {
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
 
+        lowArmBottomServo.setDirection(Servo.Direction.FORWARD);
+        lowArmHighServo.setDirection(Servo.Direction.FORWARD);
+
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
+
+        lowArmBottomServo.setPosition(0.5);
+        lowArmHighServo.setPosition(0.5);
     }
 
     @Override
@@ -115,7 +130,13 @@ public class TeleTestOpMode extends LinearOpMode {
 
         double movePrecision = 1.0;
 
-        double servoPosition = 0.0;
+
+        // LOW ARM = LA
+        double LA_INCREMENT = 0.02;
+        double LA_START = 0.5;
+
+        double lowArmBottomPos = LA_START;
+        double lowArmHighPos = LA_START;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -141,7 +162,7 @@ public class TeleTestOpMode extends LinearOpMode {
             armPower = Range.clip(arm, -0.5, 0.5);
 
             double claw = gamepad2.right_stick_x;
-            clawPower = Range.clip(claw, -0.3, 0.3);
+            clawPower = Range.clip(claw, -0.7, 0.7);
 
             // Adjust claw power if direction is down
             if (clawPower < 0) clawPower = clawPower / 2.5;
@@ -173,12 +194,30 @@ public class TeleTestOpMode extends LinearOpMode {
 
             clawDrive.setPower(clawPower);
 
-            double readServoLeft = leftServo.getPosition();
-            double readServoRight = rightServo.getPosition();
+            // Calculate LOW ARM positions
+            if (gamepad2.dpad_up) {
+                lowArmBottomPos += LA_INCREMENT;
+            }
+            if (gamepad2.dpad_down) {
+                lowArmBottomPos -= LA_INCREMENT;
+            }
+            if (gamepad2.dpad_right) {
+                lowArmHighPos += LA_INCREMENT;
+            }
+            if (gamepad2.dpad_left) {
+                lowArmHighPos -= LA_INCREMENT;
+            }
+
+            // Set position to the LOW ARM servos
+            lowArmBottomServo.setPosition(lowArmBottomPos);
+            lowArmHighServo.setPosition(lowArmHighPos);
 
             // Show telemetry info
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
+            //double readServoLeft = leftServo.getPosition();
+            //double readServoRight = rightServo.getPosition();
 
             // telemetry.addData("Servos", "(%.2f)", servoPosition);
             // telemetry.addData("Servo read", "(%.2f)", readServoLeft);
