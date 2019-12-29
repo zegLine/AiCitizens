@@ -128,11 +128,12 @@ public class TeleTestOpMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        //TODO Organize constants
         double movePrecision = 1.0;
 
 
         // LOW ARM = LA
-        double LA_INCREMENT = 0.02;
+        double LA_INCREMENT = 0.01;
         double LA_START = 0.5;
 
         double lowArmBottomPos = LA_START;
@@ -162,7 +163,7 @@ public class TeleTestOpMode extends LinearOpMode {
             armPower = Range.clip(arm, -0.5, 0.5);
 
             double claw = gamepad2.right_stick_x;
-            clawPower = Range.clip(claw, -0.7, 0.7);
+            clawPower = Range.clip(claw, -0.5, 0.5);
 
             // Adjust claw power if direction is down
             if (clawPower < 0) clawPower = clawPower / 2.5;
@@ -182,6 +183,7 @@ public class TeleTestOpMode extends LinearOpMode {
             }
 
             // Send calculated power to wheels
+            //TODO Pile up power sending in separate methods
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
 
@@ -214,7 +216,10 @@ public class TeleTestOpMode extends LinearOpMode {
 
             // Show telemetry info
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
+            telemetry.addData("SBOTTOM", "(%.2f)", lowArmBottomServo.getPosition());
+            telemetry.addData("SHIGH", "(%.2f)", lowArmHighServo.getPosition());
 
             //double readServoLeft = leftServo.getPosition();
             //double readServoRight = rightServo.getPosition();
