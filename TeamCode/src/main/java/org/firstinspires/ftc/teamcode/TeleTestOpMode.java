@@ -72,6 +72,10 @@ public class TeleTestOpMode extends LinearOpMode {
     private Servo leftServo = null;
     private Servo rightServo = null;
 
+    // Small arm servos
+    private Servo backServo = null;
+    private Servo frontServo = null;
+
     public void initializeAll() {
         // Initialize motors
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
@@ -87,18 +91,33 @@ public class TeleTestOpMode extends LinearOpMode {
         leftServo = hardwareMap.get(Servo.class, "left_servo");
         rightServo = hardwareMap.get(Servo.class, "right_servo");
 
+        // Initialize small arm servos
+        backServo = hardwareMap.get(Servo.class, "back_servo");
+        frontServo = hardwareMap.get(Servo.class, "front_servo");
+
+        //Set direction for motors
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
+        //Set direction for arm and claw drive
         armDrive.setDirection(DcMotor.Direction.FORWARD);
-
         clawDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        //Set directions for claw servos
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
 
+        //Set directions for small arm servos
+        backServo.setDirection(Servo.Direction.FORWARD);
+        frontServo.setDirection(Servo.Direction.FORWARD);
+
+
+
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
+        backServo.setPosition(0.0);
+        frontServo.setPosition(-1.0);
+
     }
 
     @Override
@@ -148,7 +167,10 @@ public class TeleTestOpMode extends LinearOpMode {
 
             boolean servoInputUp = gamepad2.right_bumper;
             boolean servoInputDown = gamepad2.left_bumper;
+            boolean servoSmallArm = gamepad2.a;
 
+
+            //Controling the claw servos
             if (servoInputUp) {
                 leftServo.setPosition(0);
                 rightServo.setPosition(0);
@@ -159,6 +181,13 @@ public class TeleTestOpMode extends LinearOpMode {
                 leftServo.setPosition(0.5);
                 rightServo.setPosition(0.5);
             }
+
+            //Controling the small arm servos
+            if (servoSmallArm) {
+                backServo.setPosition(1);
+                frontServo.setPosition(2);
+            }
+
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
