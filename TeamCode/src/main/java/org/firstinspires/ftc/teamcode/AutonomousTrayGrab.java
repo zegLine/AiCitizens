@@ -124,7 +124,7 @@ public class AutonomousTrayGrab extends LinearOpMode {
             telemetry.update();
         }
 
-        // Step 3:  Drive forward for 2 Seconds
+        // Step 4:  Drive forward for 2 Seconds
         robot.leftDrive.setPower(FORWARD_SPEED);
         robot.rightDrive.setPower(-FORWARD_SPEED);
         runtime.reset();
@@ -138,14 +138,13 @@ public class AutonomousTrayGrab extends LinearOpMode {
 
         // Step 4: Closing the small arm on the tray
 
-            while (opModeIsActive() && (runtime.seconds() < 2)){
+
 
 
 
     }
 }telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(1000);
+        }
 
 
-    }
