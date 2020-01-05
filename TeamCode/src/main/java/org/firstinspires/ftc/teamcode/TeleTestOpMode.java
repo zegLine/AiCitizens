@@ -112,8 +112,8 @@ public class TeleTestOpMode extends LinearOpMode {
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
 
-        lowArmBottomServo.setPosition(0.5);
-        lowArmHighServo.setPosition(0.5);
+        lowArmBottomServo.setPosition(0.68);
+        lowArmHighServo.setPosition(1);
     }
 
     @Override
@@ -133,11 +133,10 @@ public class TeleTestOpMode extends LinearOpMode {
 
 
         // LOW ARM = LA
-        double LA_INCREMENT = 0.01;
-        double LA_START = 0.5;
+        double LA_INCREMENT = 0.005;
 
-        double lowArmBottomPos = LA_START;
-        double lowArmHighPos = LA_START;
+        double lowArmBottomPos = 0.68;
+        double lowArmHighPos = 1.0;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -210,6 +209,12 @@ public class TeleTestOpMode extends LinearOpMode {
                 lowArmHighPos -= LA_INCREMENT;
             }
 
+            // Limit LOW ARM Bottom
+            if (lowArmBottomPos > 0.70) lowArmBottomPos = 0.70;
+
+            if (lowArmHighPos < 0.45) lowArmHighPos = 0.45;
+            if (lowArmBottomPos < 0.05) lowArmBottomPos = 0.05;
+
             // Set position to the LOW ARM servos
             lowArmBottomServo.setPosition(lowArmBottomPos);
             lowArmHighServo.setPosition(lowArmHighPos);
@@ -220,6 +225,7 @@ public class TeleTestOpMode extends LinearOpMode {
 
             telemetry.addData("SBOTTOM", "(%.2f)", lowArmBottomServo.getPosition());
             telemetry.addData("SHIGH", "(%.2f)", lowArmHighServo.getPosition());
+            telemetry.addData("DPAD UP", "" + gamepad2.dpad_up);
 
             //double readServoLeft = leftServo.getPosition();
             //double readServoRight = rightServo.getPosition();
