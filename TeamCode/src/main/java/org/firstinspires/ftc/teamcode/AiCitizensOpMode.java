@@ -52,21 +52,17 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="AiCitizens TeleOp", group="Linear Opmode")
+@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
 //@Disabled
 public class AiCitizensOpMode extends LinearOpMode {
 
     // Declare OpMode members.
-
-    // Wheels motors and runtime
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
 
-    // Arm motor
     private DcMotor armDrive = null;
 
-    // Claw servos
     private Servo leftServo = null;
     private Servo rightServo = null;
 
@@ -75,11 +71,12 @@ public class AiCitizensOpMode extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize motors
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
-        // Initialize the arm drive
         armDrive = hardwareMap.get(DcMotor.class, "arm_drive");
 
         leftServo = hardwareMap.get(Servo.class, "left_servo");
@@ -93,20 +90,18 @@ public class AiCitizensOpMode extends LinearOpMode {
         armDrive.setDirection(DcMotor.Direction.REVERSE);
 
         leftServo.setDirection(Servo.Direction.FORWARD);
-        rightServo.setDirection(Servo.Direction.REVERSE);
-
-        leftServo.setPosition(0.5);
-        rightServo.setPosition(0.5);
+        rightServo.setDirection(Servo.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-        double movePrecision = 1.0;
+        double movePrecision = 0.0;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+            // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
 
@@ -114,22 +109,31 @@ public class AiCitizensOpMode extends LinearOpMode {
 
             double servoPosition;
 
+            // Choose to drive using either Tank Mode, or POV Mode
+            // Comment out the method that's not used.  The default below is POV.
 
-            if (gamepad1.x) {
-                if (movePrecision == 1) movePrecision = 2.0; else movePrecision = 1.0;
-            }
+            // Move Precision increases as you press the dpad up and decreases as you press dpad down
+            if (gamepad1.dpad_down) movePrecision = movePrecision - 0.2;
+
+            if (gamepad1.dpad_up) movePrecision = movePrecision + 0.2;
 
             // POV Mode uses left stick to go forward, and right stick to turn.
+            // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
             double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(( drive + turn ) / movePrecision, -1.0, 1.0) ;
-            rightPower   = Range.clip(( drive - turn ) / movePrecision, -1.0, 1.0) ;
+            leftPower    = Range.clip(drive + turn - movePrecision, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn - movePrecision, -1.0, 1.0) ;
 
             double arm = gamepad2.left_stick_y;
             armPower = Range.clip(arm, -0.5, 0.5);
 
             double servoInput = gamepad2.right_stick_x;
-            servoPosition = Range.clip(servoInput, 0.0, 1.0);
+            servoPosition = Range.clip(servoInput, 0.0, 0.5);
+
+            // Tank Mode uses one stick to control each wheel.
+            // - This requires no math, but it is hard to drive forward slowly and keep straight.
+            // leftPower  = -gamepad1.left_stick_y ;
+            // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
@@ -140,13 +144,9 @@ public class AiCitizensOpMode extends LinearOpMode {
             leftServo.setPosition(servoPosition);
             rightServo.setPosition(servoPosition);
 
-            double readServo = leftServo.getPosition();
-
-            // Show telemetry info
+            // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-            telemetry.addData("Servos", "(%.2f)", servoPosition);
-            telemetry.addData("Servo read", "(%.2f)", readServo);
             telemetry.update();
         }
     }
