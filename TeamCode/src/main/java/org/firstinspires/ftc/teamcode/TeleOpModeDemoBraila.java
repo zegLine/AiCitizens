@@ -76,6 +76,10 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
     private Servo lowArmBottomServo = null;
     private Servo lowArmHighServo = null;
 
+    //Tray servos
+    private Servo trayServo1 = null;
+    private Servo trayServo2 = null;
+
     public void initializeAll() {
 
         // Initialize motors
@@ -96,6 +100,10 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
         lowArmBottomServo = hardwareMap.get(Servo.class, "low_arm_bottom_servo");
         lowArmHighServo = hardwareMap.get(Servo.class, "low_arm_high_servo");
 
+        // Initialize tray servos
+        trayServo1 = hardwareMap.get(Servo.class, "tray_servo_1");
+        trayServo2 = hardwareMap.get(Servo.class, "tray_servo_2");
+
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
@@ -109,11 +117,23 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
         lowArmBottomServo.setDirection(Servo.Direction.FORWARD);
         lowArmHighServo.setDirection(Servo.Direction.FORWARD);
 
+        trayServo1.setDirection(Servo.Direction.FORWARD);
+        trayServo2.setDirection(Servo.Direction.REVERSE);
+
+
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
 
-        lowArmBottomServo.setPosition(0.68);
-        lowArmHighServo.setPosition(1);
+        lowArmBottomServo.setPosition(0.5);
+        lowArmHighServo.setPosition(0.5);
+
+        trayServo1.setPosition(0.0);
+        trayServo2.setPosition(0.0);
+
+
+        // pussyslayer45 bag pl
+        //Eugen suck my mf dick bro
+
     }
 
     @Override
@@ -128,15 +148,15 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        //TODO Organize constants
+
         double movePrecision = 1.0;
 
 
         // LOW ARM = LA
         double LA_INCREMENT = 0.005;
 
-        double lowArmBottomPos = 0.68;
-        double lowArmHighPos = 1.0;
+        double lowArmBottomPos =0;
+        double lowArmHighPos = 0;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -162,13 +182,16 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
             armPower = Range.clip(arm, -0.5, 0.5);
 
             double claw = gamepad2.right_stick_x;
-            clawPower = Range.clip(claw, -0.5, 0.5);
+            clawPower = Range.clip(claw, -0.35, 0.35);
 
             // Adjust claw power if direction is down
             if (clawPower < 0) clawPower = clawPower / 2.5;
 
             boolean servoInputUp = gamepad2.right_bumper;
             boolean servoInputDown = gamepad2.left_bumper;
+
+            boolean closetray = gamepad1.left_bumper;
+            boolean opentray = gamepad1.right_bumper;
 
             if (servoInputUp) {
                 leftServo.setPosition(0);
@@ -182,7 +205,7 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
             }
 
             // Send calculated power to wheels
-            //TODO Pile up power sending in separate methods
+
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
 
@@ -196,28 +219,32 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
             clawDrive.setPower(clawPower);
 
             // Calculate LOW ARM positions
-            if (gamepad2.dpad_up) {
+            if (gamepad2.y) {
                 lowArmBottomPos += LA_INCREMENT;
             }
-            if (gamepad2.dpad_down) {
+            if (gamepad2.a) {
                 lowArmBottomPos -= LA_INCREMENT;
             }
-            if (gamepad2.dpad_right) {
+            if (gamepad2.b) {
                 lowArmHighPos += LA_INCREMENT;
             }
-            if (gamepad2.dpad_left) {
+            if (gamepad2.x) {
                 lowArmHighPos -= LA_INCREMENT;
             }
 
-            // Limit LOW ARM Bottom
-            if (lowArmBottomPos > 0.70) lowArmBottomPos = 0.70;
 
-            if (lowArmHighPos < 0.45) lowArmHighPos = 0.45;
-            if (lowArmBottomPos < 0.05) lowArmBottomPos = 0.05;
 
-            // Set position to the LOW ARM servos
-            lowArmBottomServo.setPosition(lowArmBottomPos);
-            lowArmHighServo.setPosition(lowArmHighPos);
+            if(opentray){
+                trayServo1.setPosition(0.5);
+                trayServo2.setPosition(0.5);
+            }
+
+            if(closetray){
+                trayServo1.setPosition(0);
+                trayServo2.setPosition(0);
+            }
+
+
 
             // Show telemetry info
             telemetry.addData("Status", "Run Time: " + runtime.toString());
