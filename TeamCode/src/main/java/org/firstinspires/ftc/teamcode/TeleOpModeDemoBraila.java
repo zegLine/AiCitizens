@@ -219,18 +219,15 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
             clawDrive.setPower(clawPower);
 
             // Calculate LOW ARM positions
-            if (gamepad2.y) {
-                lowArmBottomPos += LA_INCREMENT;
-            }
-            if (gamepad2.a) {
-                lowArmBottomPos -= LA_INCREMENT;
-            }
-            if (gamepad2.b) {
-                lowArmHighPos += LA_INCREMENT;
-            }
-            if (gamepad2.x) {
-                lowArmHighPos -= LA_INCREMENT;
-            }
+           if(gamepad2.y){
+               lowArmBottomServo.setPosition(0);
+               lowArmHighServo.setPosition(0);
+           }
+
+           if(gamepad2.a){
+               lowArmBottomServo.setPosition(0.5);
+               lowArmHighServo.setPosition(0.5);
+           }
 
 
 
