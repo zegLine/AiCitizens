@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -23,7 +24,8 @@ public class DetectionTutorial {
 
         // Schimbam unii parametrii (api key si numele camerei video)
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = hardwaremap.get(WebcamName.class, "Webcam 1");
+
 
         //initializam vuforia in sine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -80,19 +82,18 @@ public class DetectionTutorial {
                     //getLabel returneaza 2 posibilitati : STONE, sau SKYSTONE
                     recognition.getLabel();
 
-                    //getTop returneaza coordonata de Sus a dreptunghiului obiectului
-                    //getLeft returneaza coordonata din Stanga a dreptunghiului obiectului
-                            recognition.getLeft();
-                            recognition.getTop();
+                    int ObjectAngle = recognition.estimateAngleToObject();
 
-                    //getBottom returneaza coordonata de Jos a dreptunghiului obiectului
-                    //getRight returneaza coordonata din Dreapta a dreptunghiului obiectului
-                            recognition.getRight();
-                            recognition.getBottom();
-                }
+                    if(ObjectAngle > 0)
+
+
+
+
             }
         }
     }
+
+
 
 
 }

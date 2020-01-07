@@ -29,28 +29,25 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-/**
- * This 2019-2020 OpMode illustrates the basics of using the TensorFlow Object Detection API to
- * determine the position of the Skystone game elements.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
- * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained below.
- */
+
+
+
+
+
 @TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
 //@Disabled
 public class autonomousskystone extends LinearOpMode {
@@ -58,25 +55,12 @@ public class autonomousskystone extends LinearOpMode {
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
+
+
     private static final String VUFORIA_KEY =
             " AWh3WbD/////AAABmQr66RjvbkVtr+RI6oomXqIgCzVDQtdjwkNT4jkW0JBVLrq3rymbi6vq3sBtaFBrD4rYqleNmM9WFwZWYYNka48h4t85scS+/g7cTt0g84GiuI3J8uqDqL4IKpVlu+JLSEW9J0KkuoQSksN0RIxVCqC87a2MKMF9IRUuSz35PYN59JSwljttQORgO4MJGb5O8nwDbEM0cOPyKO8NpNftDnGr0MeBFJPVv2BBN2KfGdUO9/EyEPrHLfj7tchxBDkXE2Bk5muqA8MY+9cw5HoSw7aHSPd2beotDziYc9YtvbrmpdNc3HlMA0i/wAFAuh39k7che12HYEi5VdEmJ4ZG/yaTDuIsMNqz/wMZMSpjfJGd ";
 
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
+
     private VuforiaLocalizer vuforia;
 
     /**
@@ -153,12 +137,20 @@ public class autonomousskystone extends LinearOpMode {
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+
     }
 
-    /**
-     * Initialize the TensorFlow Object Detection engine.
-     */
+
+
+    DcMotor leftDrive=null;
+    DcMotor rightDrive=null;
+    Servo lowArmBot=null;
+    Servo lowArmHigh=null;
+
+
+
+
+
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -168,5 +160,109 @@ public class autonomousskystone extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 
 
+        telemetry.update();
+        double TargetHeightRatio = 0.8;
+
+        boolean Skystonefound = false;
+
+        while (opModeIsActive()) {
+            if (tfod != null) {
+
+                // creem o lista cu recunoasterile
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+
+                //daca avem ceva in lista, atunci
+                if (updatedRecognitions != null) {
+
+                    //trecem prin fiecare cu for
+                    int i = 0;
+                    for (Recognition recognition : updatedRecognitions)
+                    {
+
+                        double ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+
+
+
+                        double LeftPower, RightPower;
+
+                        LeftPower = (ObjectAngle/45)*0.25;
+                        RightPower = (ObjectAngle/45)*-0.25;
+
+                        double ImageHeight, ObjectHeight, ObjectHeightRatio;
+                        ImageHeight = recognition.getImageHeight();
+                        ObjectHeight = recognition.getHeight();
+                        ObjectHeightRatio = ObjectHeight/ImageHeight;
+
+                        if(ObjectHeightRatio<(TargetHeightRatio-0.05));
+                        {
+                            if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.2) {
+                                LeftPower = (((TargetHeightRatio - 0.05) - ObjectHeightRatio) * 0.5) + 0.035;
+                                RightPower = LeftPower;
+                            } else if (ObjectHeightRatio > (TargetHeightRatio + 0.05)) ;
+                            if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.12) {
+                                LeftPower = (((TargetHeightRatio + 0.05) - TargetHeightRatio) * -0.5) + -0.05;
+                                RightPower = LeftPower;
+                            } else if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.12) {
+                                LeftPower = 0;
+                                RightPower = 0;
+                                lowArmBot.setPosition(0.5);
+                                lowArmHigh.setPosition(0.5);
+
+                                leftDrive.setPower(-1);
+                                rightDrive.setPower(-1);
+
+                                sleep(1300);
+
+                                leftDrive.setPower(0.6);
+                                rightDrive.setPower(-0.6);
+
+                                sleep(500);
+
+                                leftDrive.setPower(1);
+                                rightDrive.setPower(1);
+
+                                sleep(2500);
+
+                                lowArmBot.setPosition(0);
+                                lowArmHigh.setPosition(0);
+
+                                leftDrive.setPower(-1);
+                                rightDrive.setPower(-1);
+
+                                sleep(1300);
+
+
+
+
+
+                            }
+
+                        }
+                        leftDrive.setPower(LeftPower);
+                        rightDrive.setPower(RightPower);
+                        break;
+
+
+                    }
+
+
+
+
+
+
+                    }
+                }
+            }
+
+
+
+
+        tfod.deactivate();
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+
+        sleep(2000);
     }
+
+
 }
