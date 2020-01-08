@@ -17,7 +17,7 @@ import java.util.List;
 
 
 @Autonomous(name = "SeekSkyStone2 (Blocks to Java)", group = "")
-public class SeekSkyStone2 extends LinearOpMode {
+class SeekSkyStone2 extends LinearOpMode {
 
     private DcMotor LeftMotor;
     private Servo UpperServo;
@@ -37,6 +37,9 @@ public class SeekSkyStone2 extends LinearOpMode {
         vuforiaSkyStone = new VuforiaSkyStone();
         tfodSkyStone = new TfodSkyStone();
         RightMotor = hardwareMap.dcMotor.get("RightMotor");
+
+        LeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        RightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Initialization
         telemetry.addData("Init ", "started");
