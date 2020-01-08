@@ -81,45 +81,41 @@ public class autonomousskystone extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         while (opModeIsActive()) {
+            leftDrive = hardwareMap.dcMotor.get("left_drive");
+            rightDrive = hardwareMap.dcMotor.get("right_drive");
+            lowArmBot = hardwareMap.servo.get("low_arm_bot");
+            lowArmHigh = hardwareMap.servo.get("low_arm_high");
 
-           leftDrive = hardwareMap.dcMotor.get("left_drive");
-           rightDrive = hardwareMap.dcMotor.get("right_drive");
-           lowArmBot = hardwareMap.servo.get("low_arm_bot");
-           lowArmHigh = hardwareMap.servo.get("low_arm_high");
+            leftDrive.setDirection(DcMotor.Direction.FORWARD);
 
-           leftDrive.setDirection(DcMotor.Direction.FORWARD);
-           rightDrive.setDirection((DcMotor.Direction.REVERSE));
-
-
-
-
-        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
-        // first.
-        initVuforia();
+           rightDrive.setDirection(DcMotor.Direction.REVERSE);
+            // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
+            // first.
+            initVuforia();
 
 
 
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
-        } else {
-            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        }
+            if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+                initTfod();
+            } else {
+                telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+            }
 
-        /**
-         * Activate TensorFlow Object Detection before we wait for the start command.
-         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-         **/
-        if (tfod != null) {
-            tfod.activate();
-        }
+            /**
+             * Activate TensorFlow Object Detection before we wait for the start command.
+             * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+             **/
+            if (tfod != null) {
+                tfod.activate();
+            }
 
-        /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
-        waitForStart();
+            /** Wait for the game to begin */
+            telemetry.addData(">", "Press Play to start op mode");
+            telemetry.update();
+            waitForStart();
 
 
-             {
+            {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -139,6 +135,12 @@ public class autonomousskystone extends LinearOpMode {
                     }
                 }
             }
+
+
+
+
+
+
         }
 
         if (tfod != null) {
@@ -185,102 +187,110 @@ public class autonomousskystone extends LinearOpMode {
 
         boolean Skystonefound = false;
 
-        while (opModeIsActive()) {
-            if (tfod != null) {
 
-                // creem o lista cu recunoasterile
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (tfod != null) {
 
-                //daca avem ceva in lista, atunci
-                if (updatedRecognitions != null) {
+            // creem o lista cu recunoasterile
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
 
-                    //trecem prin fiecare cu for
-                    int i = 0;
-                    for (Recognition recognition : updatedRecognitions)
+            //daca avem ceva in lista, atunci
+            if (updatedRecognitions != null) {
+
+                //trecem prin fiecare cu for
+                int i = 0;
+                for (Recognition recognition : updatedRecognitions)
+                {
+
+                    double ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+
+
+
+                    double LeftPower, RightPower;
+
+                    LeftPower = (ObjectAngle/45)*0.25;
+                    RightPower = (ObjectAngle/45)*-0.25;
+
+                    double ImageHeight, ObjectHeight, ObjectHeightRatio;
+                    ImageHeight = recognition.getImageHeight();
+                    ObjectHeight = recognition.getHeight();
+                    ObjectHeightRatio = ObjectHeight/ImageHeight;
+
+                    if(ObjectHeightRatio<(TargetHeightRatio-0.05));
                     {
+                        if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.2) {
+                            LeftPower = (((TargetHeightRatio - 0.05) - ObjectHeightRatio) * 0.5) + 0.035;
+                            RightPower = LeftPower;
+                        } else if (ObjectHeightRatio > (TargetHeightRatio + 0.05)) ;
+                        if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.12) {
+                            LeftPower = (((TargetHeightRatio + 0.05) - TargetHeightRatio) * -0.5) + -0.05;
+                            RightPower = LeftPower;
+                        } else if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.12) {
+                            LeftPower = 0;
+                            RightPower = 0;
+                            lowArmBot.setPosition(0.5);
+                            lowArmHigh.setPosition(0.5);
 
-                        double ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+                            leftDrive.setPower(-1);
+                            rightDrive.setPower(-1);
 
+                            sleep(1300);
 
+                            leftDrive.setPower(0.6);
+                            rightDrive.setPower(-0.6);
 
-                        double LeftPower, RightPower;
+                            sleep(500);
 
-                        LeftPower = (ObjectAngle/45)*0.25;
-                        RightPower = (ObjectAngle/45)*-0.25;
+                            leftDrive.setPower(1);
+                            rightDrive.setPower(1);
 
-                        double ImageHeight, ObjectHeight, ObjectHeightRatio;
-                        ImageHeight = recognition.getImageHeight();
-                        ObjectHeight = recognition.getHeight();
-                        ObjectHeightRatio = ObjectHeight/ImageHeight;
+                            sleep(2500);
 
-                        if(ObjectHeightRatio<(TargetHeightRatio-0.05));
-                        {
-                            if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.2) {
-                                LeftPower = (((TargetHeightRatio - 0.05) - ObjectHeightRatio) * 0.5) + 0.035;
-                                RightPower = LeftPower;
-                            } else if (ObjectHeightRatio > (TargetHeightRatio + 0.05)) ;
-                            if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.12) {
-                                LeftPower = (((TargetHeightRatio + 0.05) - TargetHeightRatio) * -0.5) + -0.05;
-                                RightPower = LeftPower;
-                            } else if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.12) {
-                                LeftPower = 0;
-                                RightPower = 0;
-                                lowArmBot.setPosition(0.5);
-                                lowArmHigh.setPosition(0.5);
+                            lowArmBot.setPosition(0);
+                            lowArmHigh.setPosition(0);
 
-                                leftDrive.setPower(-1);
-                                rightDrive.setPower(-1);
+                            leftDrive.setPower(-1);
+                            rightDrive.setPower(-1);
 
-                                sleep(1300);
-
-                                leftDrive.setPower(0.6);
-                                rightDrive.setPower(-0.6);
-
-                                sleep(500);
-
-                                leftDrive.setPower(1);
-                                rightDrive.setPower(1);
-
-                                sleep(2500);
-
-                                lowArmBot.setPosition(0);
-                                lowArmHigh.setPosition(0);
-
-                                leftDrive.setPower(-1);
-                                rightDrive.setPower(-1);
-
-                                sleep(1300);
+                            sleep(1300);
 
 
 
 
-
-                            }
 
                         }
-                        leftDrive.setPower(LeftPower);
-                        rightDrive.setPower(RightPower);
-                        break;
-
 
                     }
+                    leftDrive.setPower(LeftPower);
+                    rightDrive.setPower(RightPower);
+                    break;
 
 
-
-
-
-
-                    }
                 }
+
+
+
+
+
+
             }
-
-
+        }
 
 
         tfod.deactivate();
         leftDrive.setPower(0);
         rightDrive.setPower(0);
+
     }
 
 
+
+
+
 }
+
+
+
+
+
+
+
