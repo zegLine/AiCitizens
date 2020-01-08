@@ -114,7 +114,7 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
         leftServo.setDirection(Servo.Direction.FORWARD);
         rightServo.setDirection(Servo.Direction.REVERSE);
 
-        lowArmBottomServo.setDirection(Servo.Direction.FORWARD);
+        lowArmBottomServo.setDirection(Servo.Direction.REVERSE);
         lowArmHighServo.setDirection(Servo.Direction.FORWARD);
 
         trayServo1.setDirection(Servo.Direction.FORWARD);
@@ -124,15 +124,12 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
 
-        lowArmBottomServo.setPosition(0.5);
-        lowArmHighServo.setPosition(0.5);
+        lowArmBottomServo.setPosition(-0.5);
+        lowArmHighServo.setPosition(-0.5);
 
         trayServo1.setPosition(0.0);
         trayServo2.setPosition(0.0);
 
-
-        // pussyslayer45 bag pl
-        //Eugen suck my mf dick bro
 
     }
 
@@ -220,13 +217,13 @@ public class TeleOpModeDemoBraila extends LinearOpMode {
 
             // Calculate LOW ARM positions
            if(gamepad2.y){
-               lowArmBottomServo.setPosition(0);
-               lowArmHighServo.setPosition(0);
+               lowArmBottomServo.setPosition(0.25);
+               lowArmHighServo.setPosition(-1);
            }
 
            if(gamepad2.a){
-               lowArmBottomServo.setPosition(0.5);
-               lowArmHighServo.setPosition(0.5);
+               lowArmBottomServo.setPosition(-0.5);
+               lowArmHighServo.setPosition(1);
            }
 
 

@@ -29,8 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -48,7 +48,8 @@ import java.util.List;
 
 
 
-@TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
+
+@Autonomous(name = "AutonomousSkyStonedetection", group = "Concept")
 //@Disabled
 public class autonomousskystone extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
@@ -71,9 +72,17 @@ public class autonomousskystone extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        if (opModeIsActive()) {
+
+
+
+
+
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
+
+
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
@@ -94,7 +103,7 @@ public class autonomousskystone extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
+
             while (opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -142,11 +151,10 @@ public class autonomousskystone extends LinearOpMode {
 
 
 
-    DcMotor leftDrive=null;
-    DcMotor rightDrive=null;
-    Servo lowArmBot=null;
-    Servo lowArmHigh=null;
-
+    DcMotor leftDrive;
+    DcMotor rightDrive;
+    Servo lowArmBot;
+    Servo lowArmHigh;
 
 
 
