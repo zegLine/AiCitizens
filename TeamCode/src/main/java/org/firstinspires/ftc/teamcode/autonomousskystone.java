@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -50,7 +51,7 @@ import java.util.List;
 
 
 @Autonomous(name = "AutonomousSkyStonedetection", group = "Concept")
-//@Disabled
+
 public class autonomousskystone extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
@@ -70,10 +71,24 @@ public class autonomousskystone extends LinearOpMode {
      */
     private TFObjectDetector tfod;
 
-    @Override
-    public void runOpMode() {
-        if (opModeIsActive()) {
+    DcMotor leftDrive;
+    DcMotor rightDrive;
+    Servo lowArmBot;
+    Servo lowArmHigh;
 
+
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        while (opModeIsActive()) {
+
+           leftDrive = hardwareMap.dcMotor.get("left_drive");
+           rightDrive = hardwareMap.dcMotor.get("right_drive");
+           lowArmBot = hardwareMap.servo.get("low_arm_bot");
+           lowArmHigh = hardwareMap.servo.get("low_arm_high");
+
+           leftDrive.setDirection(DcMotor.Direction.FORWARD);
+           rightDrive.setDirection((DcMotor.Direction.REVERSE));
 
 
 
@@ -104,7 +119,7 @@ public class autonomousskystone extends LinearOpMode {
         waitForStart();
 
 
-            while (opModeIsActive()) {
+             {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -151,10 +166,7 @@ public class autonomousskystone extends LinearOpMode {
 
 
 
-    DcMotor leftDrive;
-    DcMotor rightDrive;
-    Servo lowArmBot;
-    Servo lowArmHigh;
+
 
 
 
@@ -268,8 +280,6 @@ public class autonomousskystone extends LinearOpMode {
         tfod.deactivate();
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-
-        sleep(2000);
     }
 
 
