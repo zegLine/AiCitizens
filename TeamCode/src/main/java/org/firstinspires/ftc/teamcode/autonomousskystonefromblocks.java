@@ -75,7 +75,7 @@ public class SeekSkyStone2 extends LinearOpMode {
         boolean SkystoneFound = false;
         while (opModeIsActive() && !SkystoneFound) {
             // Get list of current recognitions.
-            List<Recognition> recognitions = tfod.getUpdatedRecognitions();
+            List<Recognition> recognitions = tfodSkyStone.getUpdatedRecognitions();
             // Report number of recognitions.
             telemetry.addData("Objects Recognized", recognitions.size());
             // If some objects detected...
@@ -85,7 +85,7 @@ public class SeekSkyStone2 extends LinearOpMode {
                 // Step through the stones detected.
                 // TODO: Enter the type for variable named recognition
                 for (Recognition recognition : recognitions) {
-                    if (recognitions.getLabel().equals("Skystone")) {
+                    if (recognition.getLabel().equals("Skystone")) {
                         // A Skystone has been detected.
                         SkystoneCount = SkystoneCount + 1;
                         // We can assume this is the first Skystone
