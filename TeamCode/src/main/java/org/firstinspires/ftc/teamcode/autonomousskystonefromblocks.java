@@ -5,10 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaSkyStone;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone;
+
+import java.util.List;
+
+
 
 @Autonomous(name = "SeekSkyStone2 (Blocks to Java)", group = "")
 public class SeekSkyStone2 extends LinearOpMode {
@@ -40,7 +46,7 @@ public class SeekSkyStone2 extends LinearOpMode {
         LowerServo.setPosition(0);
         // Init Vuforia because Tensor Flow needs it.
         vuforiaSkyStone.initialize(
-                "", // vuforiaLicenseKey
+                "AWh3WbD/////AAABmQr66RjvbkVtr+RI6oomXqIgCzVDQtdjwkNT4jkW0JBVLrq3rymbi6vq3sBtaFBrD4rYqleNmM9WFwZWYYNka48h4t85scS+/g7cTt0g84GiuI3J8uqDqL4IKpVlu+JLSEW9J0KkuoQSksN0RIxVCqC87a2MKMF9IRUuSz35PYN59JSwljttQORgO4MJGb5O8nwDbEM0cOPyKO8NpNftDnGr0MeBFJPVv2BBN2KfGdUO9/EyEPrHLfj7tchxBDkXE2Bk5muqA8MY+9cw5HoSw7aHSPd2beotDziYc9YtvbrmpdNc3HlMA0i/wAFAuh39k7che12HYEi5VdEmJ4ZG/yaTDuIsMNqz/wMZMSpjfJGd", // vuforiaLicenseKey
                 VuforiaLocalizer.CameraDirection.BACK, // cameraDirection
                 false, // useExtendedTracking
                 true, // enableCameraMonitoring
@@ -69,7 +75,7 @@ public class SeekSkyStone2 extends LinearOpMode {
         boolean SkystoneFound = false;
         while (opModeIsActive() && !SkystoneFound) {
             // Get list of current recognitions.
-            double recognitions = tfodSkyStone.getRecognitions();
+            List<Recognition> recognitions = tfod.getUpdatedRecognitions();
             // Report number of recognitions.
             telemetry.addData("Objects Recognized", recognitions.size());
             // If some objects detected...
@@ -78,8 +84,8 @@ public class SeekSkyStone2 extends LinearOpMode {
                  int SkystoneCount = 0;
                 // Step through the stones detected.
                 // TODO: Enter the type for variable named recognition
-                for (UNKNOWN_TYPE recognition : recognitions) {
-                    if (recognition.getLabel().equals("Skystone")) {
+                for (Recognition recognition : recognitions) {
+                    if (recognitions.getLabel().equals("Skystone")) {
                         // A Skystone has been detected.
                         SkystoneCount = SkystoneCount + 1;
                         // We can assume this is the first Skystone
@@ -196,4 +202,4 @@ public class SeekSkyStone2 extends LinearOpMode {
         sleep(2000);
 
         vuforiaSkyStone.close();
-        tfodSkyStone.close();
+        tfodSkyStone.close();}}
