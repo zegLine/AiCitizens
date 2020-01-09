@@ -162,6 +162,31 @@ class SeekSkyStone2 extends LinearOpMode {
                                 LowerServo.setPosition(0.5);
                                 UpperServo.setPosition(0.5);
                                 SkystoneFound = true;
+
+                                LeftMotor.setPower(-1);
+                                RightMotor.setPower(-1);
+
+                                sleep(1300);
+
+                                LeftMotor.setPower(0.6);
+                                RightMotor.setPower(-0.6);
+
+                                sleep(500);
+
+                                LeftMotor.setPower(1);
+                                RightMotor.setPower(1);
+
+                                sleep(2500);
+
+                                LowerServo.setPosition(0);
+                                UpperServo.setPosition(0);
+
+                                LeftMotor.setPower(-1);
+                                RightMotor.setPower(-1);
+
+                                sleep(1300);
+
+
                             } else {
                                 // Otherwise use current power levels to turn
                                 // to better center on gold.
