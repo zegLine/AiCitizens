@@ -153,6 +153,13 @@ class SeekSkyStone2 extends LinearOpMode {
                             telemetry.addData("Distance", "Correct");
                             // If calculated turn power levels are small...
                             if (Math.abs(LeftPower) + Math.abs(RightPower) < 0.12) {
+
+                                /*
+                                ----------------------------------------------------------------
+                                    Skystone FOUND and IN PLACE
+                                    GRABBING Skystone and pushing it backwards along with robot
+                                ----------------------------------------------------------------
+                                */
                                 // ...robot is centered on the Skystone.
                                 telemetry.addData("Action", "Motors off, hit the Skystone");
                                 // Turn motors off by setting power to 0.
@@ -230,4 +237,41 @@ class SeekSkyStone2 extends LinearOpMode {
         sleep(2000);
 
         vuforiaSkyStone.close();
-        tfodSkyStone.close();}}
+        tfodSkyStone.close();
+
+        /*
+        ------------------------------------------------------
+            After Skystone has been GRABBED and pushed BACK
+        ------------------------------------------------------
+        */
+
+
+        // Turn 90 degrees to start going towards tray
+        LeftMotor.setPower(0.5);
+        RightMotor.setPower(-0.5);
+
+        sleep(2000);
+
+        // WARNING This assumes robot is not going to hit the bridge
+        //         Make sure to retract arms to LOW position BEFORE THIS CODE
+
+        // Start going towards tray
+        LeftMotor.setPower(1);
+        RightMotor.setPower(1);
+
+        sleep(5000);
+
+        // Rotate 90 degrees to align with tray
+        LeftMotor.setPower(-0.5);
+        RightMotor.setPower(0.5);
+
+        // Go towards tray
+        LeftMotor.setPower(0.7);
+        RightMotor.setPower(0.7);
+
+        sleep(1000);
+
+        // TODO Grab tray and push backwards
+
+    }
+}
