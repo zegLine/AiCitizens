@@ -43,8 +43,6 @@ public class AutonomousTrayGrabOmni extends LinearOpMode {
         trayGrab1.setPosition(0.5);
         trayGrab2.setPosition(0.5);
 
-        leftWheel.setPower(0.6);
-        rightwheel.setPower(-0.6);
 
         sleep(500);
 
