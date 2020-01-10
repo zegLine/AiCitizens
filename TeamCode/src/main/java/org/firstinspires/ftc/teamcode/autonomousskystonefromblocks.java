@@ -16,21 +16,21 @@ import java.util.List;
 
 
 
-@Autonomous(name = "SeekSkyStone2 (Blocks to Java)", group = "")
-class SeekSkyStone2 extends LinearOpMode {
+@Autonomous(name = "autonomousskystonefromblocks)", group = "Autonommous")
+public class autonomousskystonefromblocks extends LinearOpMode {
 
-    private DcMotor LeftMotor;
-    private Servo UpperServo;
-    private Servo LowerServo;
-    private VuforiaSkyStone vuforiaSkyStone;
-    private TfodSkyStone tfodSkyStone;
-    private DcMotor RightMotor;
+    DcMotor LeftMotor;
+    Servo UpperServo;
+    Servo LowerServo;
+    VuforiaSkyStone vuforiaSkyStone;
+    TfodSkyStone tfodSkyStone;
+    DcMotor RightMotor;
 
     /**
      * This function is executed when this Op Mode is selected from the Driver Station.
      */
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode()  {
         LeftMotor = hardwareMap.dcMotor.get("LeftMotor");
         UpperServo = hardwareMap.servo.get("UpperServo");
         LowerServo = hardwareMap.servo.get("LowerServo");
@@ -38,20 +38,18 @@ class SeekSkyStone2 extends LinearOpMode {
         tfodSkyStone = new TfodSkyStone();
         RightMotor = hardwareMap.dcMotor.get("RightMotor");
 
-        LeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        RightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Initialization
         telemetry.addData("Init ", "started");
         telemetry.update();
         LeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         UpperServo.setPosition(1);
-        LowerServo.setPosition(0);
+        LowerServo.setPosition(-0.5);
         // Init Vuforia because Tensor Flow needs it.
         vuforiaSkyStone.initialize(
                 "AWh3WbD/////AAABmQr66RjvbkVtr+RI6oomXqIgCzVDQtdjwkNT4jkW0JBVLrq3rymbi6vq3sBtaFBrD4rYqleNmM9WFwZWYYNka48h4t85scS+/g7cTt0g84GiuI3J8uqDqL4IKpVlu+JLSEW9J0KkuoQSksN0RIxVCqC87a2MKMF9IRUuSz35PYN59JSwljttQORgO4MJGb5O8nwDbEM0cOPyKO8NpNftDnGr0MeBFJPVv2BBN2KfGdUO9/EyEPrHLfj7tchxBDkXE2Bk5muqA8MY+9cw5HoSw7aHSPd2beotDziYc9YtvbrmpdNc3HlMA0i/wAFAuh39k7che12HYEi5VdEmJ4ZG/yaTDuIsMNqz/wMZMSpjfJGd", // vuforiaLicenseKey
                 VuforiaLocalizer.CameraDirection.BACK, // cameraDirection
-                false, // useExtendedTracking
+                true, // useExtendedTracking
                 true, // enableCameraMonitoring
                 VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES, // cameraMonitorFeedback
                 0, // dx
@@ -79,14 +77,12 @@ class SeekSkyStone2 extends LinearOpMode {
         while (opModeIsActive() && !SkystoneFound) {
             // Get list of current recognitions.
             List<Recognition> recognitions = tfodSkyStone.getUpdatedRecognitions();
-            // Report number of recognitions.
-            telemetry.addData("Objects Recognized", recognitions.size());
+
             // If some objects detected...
             if (recognitions.size() > 0) {
                 // ...let's count how many are gold.
                  int SkystoneCount = 0;
                 // Step through the stones detected.
-                // TODO: Enter the type for variable named recognition
                 for (Recognition recognition : recognitions) {
                     if (recognition.getLabel().equals("Skystone")) {
                         // A Skystone has been detected.
@@ -239,39 +235,12 @@ class SeekSkyStone2 extends LinearOpMode {
         vuforiaSkyStone.close();
         tfodSkyStone.close();
 
-        /*
-        ------------------------------------------------------
-            After Skystone has been GRABBED and pushed BACK
-        ------------------------------------------------------
-        */
 
 
-        // Turn 90 degrees to start going towards tray
-        LeftMotor.setPower(0.5);
-        RightMotor.setPower(-0.5);
 
-        sleep(2000);
 
-        // WARNING This assumes robot is not going to hit the bridge
-        //         Make sure to retract arms to LOW position BEFORE THIS CODE
 
-        // Start going towards tray
-        LeftMotor.setPower(1);
-        RightMotor.setPower(1);
 
-        sleep(5000);
-
-        // Rotate 90 degrees to align with tray
-        LeftMotor.setPower(-0.5);
-        RightMotor.setPower(0.5);
-
-        // Go towards tray
-        LeftMotor.setPower(0.7);
-        RightMotor.setPower(0.7);
-
-        sleep(1000);
-
-        // TODO Grab tray and push backwards
 
     }
 }
