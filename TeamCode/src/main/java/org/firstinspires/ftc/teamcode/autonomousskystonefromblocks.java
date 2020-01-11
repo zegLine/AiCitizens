@@ -79,7 +79,7 @@ public class autonomousskystonefromblocks extends LinearOpMode {
             List<Recognition> recognitions = tfodSkyStone.getUpdatedRecognitions();
 
             // If some objects detected...
-            if (recognitions.size() > 0) {
+            //if (recognitions.size() > 0) {
                 // ...let's count how many are gold.
                  int SkystoneCount = 0;
                 // Step through the stones detected.
@@ -215,6 +215,7 @@ public class autonomousskystonefromblocks extends LinearOpMode {
                     LeftMotor.setPower(-0.1);
                     RightMotor.setPower(-0.1);
                 }
+            /*
             } else {
                 // No objects detected
                 telemetry.addData("Status", "No objects detected");
@@ -222,7 +223,7 @@ public class autonomousskystonefromblocks extends LinearOpMode {
                 // Back up slowly hoping to bring objects in view.
                 LeftMotor.setPower(-0.1);
                 RightMotor.setPower(-0.1);
-            }
+            }*/
             telemetry.update();
         }
         // Skystone found, time is up or stop was requested.
