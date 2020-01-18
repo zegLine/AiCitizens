@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name="AutonomousTrayGrabOmni", group="Autonomous")
-public class AutonomousTrayGrabOmni extends LinearOpMode {
+public  class AutonomousTrayGrabOmni extends LinearOpMode {
 
    DcMotor leftWheel;
    DcMotor rightwheel;
@@ -22,28 +22,28 @@ public class AutonomousTrayGrabOmni extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        leftWheel = hardwareMap.dcMotor.get("LeftMotor");
-        rightwheel = hardwareMap.dcMotor.get("RightMotor");
+        leftWheel = hardwareMap.dcMotor.get("left_wheel");
+        rightwheel = hardwareMap.dcMotor.get("right_wheel");
         trayGrab1 = hardwareMap.servo.get("tray_grab_1");
         trayGrab2 = hardwareMap.servo.get("tray_grab_2");
         leftWheel.setDirection(DcMotor.Direction.FORWARD);
         rightwheel.setDirection(DcMotor.Direction.REVERSE);
 
-        trayGrab1.setPosition(0.5);
-        trayGrab2.setPosition(0.5);
+        trayGrab1.setPosition(0);
+        trayGrab2.setPosition(0);
 
         waitForStart();
 
         leftWheel.setPower(1);
         rightwheel.setPower(1);
 
-        sleep(2100);
+        sleep(1800);
 
         leftWheel.setPower(0);
         rightwheel.setPower(0);
 
-        trayGrab1.setPosition(-0.9);
-        trayGrab2.setPosition(1);
+        trayGrab1.setPosition(0.5);
+        trayGrab2.setPosition(0.5);
 
 
         sleep(500);

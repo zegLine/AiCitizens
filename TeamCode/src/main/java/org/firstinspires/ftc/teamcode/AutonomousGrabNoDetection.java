@@ -28,21 +28,21 @@ public class AutonomousGrabNoDetection extends LinearOpMode {
         lowArmHighServo = hardwareMap.servo.get("low_arm_high_servo");
         leftWheel.setDirection(DcMotor.Direction.REVERSE);
 
-        lowArmBotServo.setPosition(0);
-        lowArmHighServo.setPosition(0);
+        lowArmBotServo.setPosition(-0.5);
+        lowArmHighServo.setPosition(1);
 
         waitForStart();
 
         leftWheel.setPower(1);
         rightwheel.setPower(1);
 
-        sleep(1300);
+        sleep(1200);
 
         leftWheel.setPower(0);
         rightwheel.setPower(0);
 
-        lowArmBotServo.setPosition(0.5);
-        lowArmHighServo.setPosition(0.5);
+        lowArmBotServo.setPosition(0.25);
+        lowArmHighServo.setPosition(1);
 
         leftWheel.setPower(-1);
         rightwheel.setPower(-1);
@@ -65,48 +65,15 @@ public class AutonomousGrabNoDetection extends LinearOpMode {
         leftWheel.setPower(0);
         rightwheel.setPower(0);
 
-        lowArmBotServo.setPosition(0);
-        lowArmHighServo.setPosition(0);
+        lowArmBotServo.setPosition(-0.5);
+        lowArmHighServo.setPosition(1);
 
         leftWheel.setPower(-1);
         rightwheel.setPower(-1);
 
         sleep(1800);
 
-        leftWheel.setPower(-0.6);
-        rightwheel.setPower(0.6);
 
-        sleep(500);
-
-
-        lowArmBotServo.setPosition(0.5);
-        lowArmHighServo.setPosition(0.5);
-
-        leftWheel.setPower(-1);
-        rightwheel.setPower(-1);
-
-        sleep(1000);
-
-        leftWheel.setPower(-0.6);
-        rightwheel.setPower(0.6);
-
-        sleep(500);
-
-        leftWheel.setPower(1);
-        rightwheel.setPower(1);
-
-        sleep(2000);
-
-        leftWheel.setPower(0);
-        rightwheel.setPower(0);
-
-        lowArmBotServo.setPosition(0);
-        lowArmHighServo.setPosition(0);
-
-        leftWheel.setPower(-1);
-        rightwheel.setPower(-1);
-
-        sleep(900);
 
 
 

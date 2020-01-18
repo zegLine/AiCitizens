@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Camera;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaSkyStone;
@@ -14,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone;
 
 import java.util.List;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 
 @Autonomous(name = "autonomousskystonefromblocks)", group = "Autonommous")
@@ -25,6 +29,9 @@ public class autonomousskystonefromblocks extends LinearOpMode {
     VuforiaSkyStone vuforiaSkyStone;
     TfodSkyStone tfodSkyStone;
     DcMotor RightMotor;
+    WebcamName webcamName = null;
+    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
+    private static final boolean PHONE_IS_PORTRAIT = false  ;
 
     /**
      * This function is executed when this Op Mode is selected from the Driver Station.
@@ -37,14 +44,15 @@ public class autonomousskystonefromblocks extends LinearOpMode {
         vuforiaSkyStone = new VuforiaSkyStone();
         tfodSkyStone = new TfodSkyStone();
         RightMotor = hardwareMap.dcMotor.get("RightMotor");
+        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
 
         // Initialization
         telemetry.addData("Init ", "started");
         telemetry.update();
         LeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        UpperServo.setPosition(1);
-        LowerServo.setPosition(-0.5);
+        UpperServo.setPosition(0.5);
+        LowerServo.setPosition(0.5);
         // Init Vuforia because Tensor Flow needs it.
         vuforiaSkyStone.initialize(
                 "AWh3WbD/////AAABmQr66RjvbkVtr+RI6oomXqIgCzVDQtdjwkNT4jkW0JBVLrq3rymbi6vq3sBtaFBrD4rYqleNmM9WFwZWYYNka48h4t85scS+/g7cTt0g84GiuI3J8uqDqL4IKpVlu+JLSEW9J0KkuoQSksN0RIxVCqC87a2MKMF9IRUuSz35PYN59JSwljttQORgO4MJGb5O8nwDbEM0cOPyKO8NpNftDnGr0MeBFJPVv2BBN2KfGdUO9/EyEPrHLfj7tchxBDkXE2Bk5muqA8MY+9cw5HoSw7aHSPd2beotDziYc9YtvbrmpdNc3HlMA0i/wAFAuh39k7che12HYEi5VdEmJ4ZG/yaTDuIsMNqz/wMZMSpjfJGd", // vuforiaLicenseKey
@@ -70,6 +78,10 @@ public class autonomousskystonefromblocks extends LinearOpMode {
         // height value corresponding to the length
         // of the robot's neck.
        double  TargetHeightRatio = 0.8;
+
+
+
+
         waitForStart();
         tfodSkyStone.activate();
         // We'll loop until gold block captured or time is up
@@ -79,7 +91,7 @@ public class autonomousskystonefromblocks extends LinearOpMode {
             List<Recognition> recognitions = tfodSkyStone.getUpdatedRecognitions();
 
             // If some objects detected...
-            //if (recognitions.size() > 0) {
+            if (recognitions.size() > 0) {
                 // ...let's count how many are gold.
                  int SkystoneCount = 0;
                 // Step through the stones detected.
@@ -215,7 +227,7 @@ public class autonomousskystonefromblocks extends LinearOpMode {
                     LeftMotor.setPower(-0.1);
                     RightMotor.setPower(-0.1);
                 }
-            /*
+
             } else {
                 // No objects detected
                 telemetry.addData("Status", "No objects detected");
@@ -223,7 +235,7 @@ public class autonomousskystonefromblocks extends LinearOpMode {
                 // Back up slowly hoping to bring objects in view.
                 LeftMotor.setPower(-0.1);
                 RightMotor.setPower(-0.1);
-            }*/
+            }
             telemetry.update();
         }
         // Skystone found, time is up or stop was requested.
