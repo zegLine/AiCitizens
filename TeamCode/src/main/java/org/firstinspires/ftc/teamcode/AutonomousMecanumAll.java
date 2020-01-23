@@ -17,14 +17,15 @@ import java.util.Locale;
 
 public abstract class AutonomousMecanumAll extends LinearOpMode {
 
-     DcMotor leftFrontMotor = null;
-     DcMotor rightFrontMotor = null;
-     DcMotor leftRearMotor = null;
-     DcMotor rightRearMotor = null;
-     ColorSensor sensorColor = null;
-     Servo trayservo1 = null;
-     Servo trayservo2 = null;
-     ColorSensor sensorColor = null;
+     private DcMotor leftFrontMotor = null;
+     private DcMotor rightFrontMotor = null;
+     private DcMotor leftRearMotor = null;
+     private DcMotor rightRearMotor = null;
+     private Servo trayservo1 = null;
+     private Servo trayservo2 = null;
+     private Servo lowarmUp = null;
+     private Servo lowarmDown = null;
+
 
 
 // Initialize motors
@@ -41,6 +42,8 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
         rightFrontMotor = hardwareMap.dcMotor.get("rigthFront");
         leftRearMotor = hardwareMap.dcMotor.get("leftRear");
         rightRearMotor = hardwareMap.dcMotor.get("rightRear");
+        lowarmUp = hardwareMap.servo.get("lowarmup");
+        lowarmDown = hardwareMap.servo.get("lowarmdown");
         trayservo1 = hardwareMap.servo.get("trayservo1");
         trayservo2 = hardwareMap.servo.get("trayservo2");
 
@@ -55,8 +58,11 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
         leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        trayservo1.setPosition(-0.5);
-        trayservo2.setPosition(1);
+        lowarmUp.setPosition(-0.5);
+        lowarmDown.setPosition(1);
+        trayservo1.setPosition(0);
+        trayservo2.setPosition(0);
+
 
 
         final double SCALE_FACTOR = 255;
@@ -83,8 +89,9 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
             telemetry.addData("Blue ", sensorColor.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
-            int detectionSkyStone = (sensorColor.red() * sensorColor.blue()) / (sensorColor.blue() * sensorColor.blue());
+            int detectionSkyStone = (sensorColor.red() * sensorColor.green()) / (sensorColor.blue() * sensorColor.blue());
             int k=1;
+            boolean detected=false;
 
             leftFrontMotor.setPower(1);
             rightFrontMotor.setPower(1);
@@ -93,45 +100,192 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
 
             sleep(500);
 
+            while(k<=3){
+                if(detectionSkyStone<2){
+                    leftFrontMotor.setPower(1);
+                    rightFrontMotor.setPower(1);
+                    leftRearMotor.setPower(1);
+                    rightRearMotor.setPower(1);
+                    sleep(150);
+
+                    lowarmUp.setPosition(0.25);
+                    lowarmDown.setPosition(-1);
+
+                    leftFrontMotor.setPower(-1);
+                    rightFrontMotor.setPower(-1);
+                    leftRearMotor.setPower(-1);
+                    rightRearMotor.setPower(-1);
+                    sleep(200);
+
+                    leftFrontMotor.setPower(1);
+                    rightFrontMotor.setPower(-1);
+                    leftRearMotor.setPower(-1);
+                    rightRearMotor.setPower(1);
+                    sleep(2000);
+
+                    trayservo1.setPosition(-0.5);
+                    trayservo2.setPosition(1);
 
 
-            if(detectionSkyStone<2){
-                leftFrontMotor.setPower(1);
-                rightFrontMotor.setPower(1);
-                leftRearMotor.setPower(1);
-                rightRearMotor.setPower(1);
-                sleep(150);
+                    if(k==1)
+                    {
+                        leftFrontMotor.setPower(-1);
+                        rightFrontMotor.setPower(1);
+                        leftRearMotor.setPower(1);
+                        rightRearMotor.setPower(-1);
+                        sleep(3000);
 
-                trayservo1.setPosition(0.25);
-                trayservo2.setPosition(-1);
+                        leftFrontMotor.setPower(0);
+                        rightFrontMotor.setPower(0);
+                        leftRearMotor.setPower(0);
+                        rightRearMotor.setPower(0);
 
-                leftFrontMotor.setPower(-1);
-                rightFrontMotor.setPower(-1);
-                leftRearMotor.setPower(-1);
-                rightRearMotor.setPower(-1);
-                sleep(200);
+                        leftFrontMotor.setPower(1);
+                        rightFrontMotor.setPower(1);
+                        leftRearMotor.setPower(1);
+                        rightRearMotor.setPower(1);
+                        sleep(200);
 
-                leftFrontMotor.setPower(1);
-                rightFrontMotor.setPower(-1);
-                leftRearMotor.setPower(-1);
-                rightRearMotor.setPower(1);
-                sleep(2000);
+                        lowarmUp.setPosition(0.25);
+                        lowarmDown.setPosition(-1);
 
-                trayservo1.setPosition(-0.5);
-                trayservo2.setPosition(1);
+                        leftFrontMotor.setPower(-1);
+                        rightFrontMotor.setPower(-1);
+                        leftRearMotor.setPower(-1);
+                        rightRearMotor.setPower(-1);
+                        sleep(200);
 
-                if(k==1)
-                {
+                        leftFrontMotor.setPower(1);
+                        rightFrontMotor.setPower(-1);
+                        leftRearMotor.setPower(-1);
+                        rightRearMotor.setPower(1);
+                        sleep(3000);
+
+                        lowarmUp.setPosition(-0.5);
+                        lowarmDown.setPosition(1);
+
+
+
+
+
+
+                    }
+
+                    if(k==2) {
+                        leftFrontMotor.setPower(-1);
+                        rightFrontMotor.setPower(1);
+                        leftRearMotor.setPower(1);
+                        rightRearMotor.setPower(-1);
+                        sleep(3000);
+
+                        leftFrontMotor.setPower(0);
+                        rightFrontMotor.setPower(0);
+                        leftRearMotor.setPower(0);
+                        rightRearMotor.setPower(0);
+
+                        leftFrontMotor.setPower(1);
+                        rightFrontMotor.setPower(1);
+                        leftRearMotor.setPower(1);
+                        rightRearMotor.setPower(1);
+                        sleep(200);
+
+                        trayservo1.setPosition(0.25);
+                        trayservo2.setPosition(-1);
+
+                        leftFrontMotor.setPower(-1);
+                        rightFrontMotor.setPower(-1);
+                        leftRearMotor.setPower(-1);
+                        rightRearMotor.setPower(-1);
+                        sleep(200);
+
+                        leftFrontMotor.setPower(1);
+                        rightFrontMotor.setPower(-1);
+                        leftRearMotor.setPower(-1);
+                        rightRearMotor.setPower(1);
+                        sleep(3500);
+
+                        lowarmUp.setPosition(-0.5);
+                        lowarmDown.setPosition(1);
+                    }
+
+                    if(k==3)
+                    {
+                        leftFrontMotor.setPower(-1);
+                        rightFrontMotor.setPower(1);
+                        leftRearMotor.setPower(1);
+                        rightRearMotor.setPower(-1);
+                        sleep(3000);
+
+                        leftFrontMotor.setPower(0);
+                        rightFrontMotor.setPower(0);
+                        leftRearMotor.setPower(0);
+                        rightRearMotor.setPower(0);
+
+                        leftFrontMotor.setPower(1);
+                        rightFrontMotor.setPower(1);
+                        leftRearMotor.setPower(1);
+                        rightRearMotor.setPower(1);
+                        sleep(200);
+
+                        lowarmUp.setPosition(0.25);
+                        lowarmDown.setPosition(-1);
+
+                        leftFrontMotor.setPower(-1);
+                        rightFrontMotor.setPower(-1);
+                        leftRearMotor.setPower(-1);
+                        rightRearMotor.setPower(-1);
+                        sleep(200);
+
+                        leftFrontMotor.setPower(1);
+                        rightFrontMotor.setPower(-1);
+                        leftRearMotor.setPower(-1);
+                        rightRearMotor.setPower(1);
+                        sleep(3700);
+
+                        lowarmUp.setPosition(-0.5);
+                        lowarmDown.setPosition(1);
+                    }
+
+
+
+
+                }
+                else{
                     leftFrontMotor.setPower(-1);
                     rightFrontMotor.setPower(1);
                     leftRearMotor.setPower(1);
                     rightRearMotor.setPower(-1);
-                    sleep(3000);
+                    sleep(200);
+                    k=k+1;
+
                 }
-
-
-
             }
+
+            lowarmUp.setPosition(-0.5);
+            lowarmDown.setPosition(1);
+
+            leftFrontMotor.setPower(-1);
+            rightFrontMotor.setPower(-1);
+            leftRearMotor.setPower(-1);
+            rightRearMotor.setPower(-1);
+            sleep(400);
+
+            leftFrontMotor.setPower(-1);
+            rightFrontMotor.setPower(1);
+            leftRearMotor.setPower(-1);
+            rightRearMotor.setPower(1);
+
+            sleep(800);
+
+            trayservo1.setPosition(0.5);
+            trayservo2.setPosition(-0.5);
+
+
+
+
+
+
+
 
 
 
