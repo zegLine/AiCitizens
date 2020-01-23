@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
 
+import org.firstinspires.ftc.teamcode.LibraryMecanumAuto;
+
 @Autonomous(name="AutonomousMecanumAll", group="Autonomous")
 
 
@@ -26,12 +28,74 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
      private Servo lowarmUp = null;
      private Servo lowarmDown = null;
 
+    public void moveForward(long time, double power) {
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
+
+    public void moveBackward(long time, double power) {
+
+        power -= power;
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
+
+    public void moveLeft(long time, double power) {
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(-power);
+
+        sleep(time);
+    }
+
+    public void moveRight(long time, double power) {
+
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
+
+    public void turnLeft(long time, double power) {
+
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(-power);
+
+        sleep(time);
+    }
+
+    public void turnRight(long time, double power) {
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
 
 
 // Initialize motors
 
 
     ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+
 
 
     @Override
@@ -42,8 +106,10 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
         rightFrontMotor = hardwareMap.dcMotor.get("rigthFront");
         leftRearMotor = hardwareMap.dcMotor.get("leftRear");
         rightRearMotor = hardwareMap.dcMotor.get("rightRear");
+
         lowarmUp = hardwareMap.servo.get("lowarmup");
         lowarmDown = hardwareMap.servo.get("lowarmdown");
+
         trayservo1 = hardwareMap.servo.get("trayservo1");
         trayservo2 = hardwareMap.servo.get("trayservo2");
 

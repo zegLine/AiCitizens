@@ -131,7 +131,25 @@ public abstract class LibraryMecanumAuto extends LinearOpMode {
         sleep(time);
     }
 
+    public void turnLeft(long time, double power) {
 
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(-power);
+
+        sleep(time);
+    }
+
+    public void turnRight(long time, double power) {
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
 
 
 }
