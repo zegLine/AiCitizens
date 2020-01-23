@@ -87,6 +87,17 @@ public class AiCitizensMecanumTele extends LinearOpMode {
     private Servo leftServo = null;
     private Servo rightServo = null;
 
+    //tray servos
+    private Servo trayservo1 = null;
+    private Servo trayservo2 = null;
+
+    //small arm servo
+    private Servo lowarmup = null;
+    private Servo lowarmdown = null;
+
+
+
+
     public void initializeAll() {
         // Initialize motors
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
@@ -103,6 +114,11 @@ public class AiCitizensMecanumTele extends LinearOpMode {
         // Initialize the claw servos
         leftServo = hardwareMap.get(Servo.class, "left_servo");
         rightServo = hardwareMap.get(Servo.class, "right_servo");
+
+        trayservo1 = hardwareMap.get(Servo.class, "trayservo1");
+        trayservo2 = hardwareMap.get(Servo.class, "trayservo2");
+        lowarmup = hardwareMap.get(Servo.class, "lowarmup");
+        lowarmdown = hardwareMap.get(Servo.class, "lowarmdown");
 
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -123,6 +139,11 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
         leftServo.setPosition(0.5);
         rightServo.setPosition(0.5);
+
+        trayservo1.setPosition(0);
+        trayservo2.setPosition(0);
+        lowarmup.setPosition(-0.5);
+        lowarmdown.setPosition(1);
     }
 
     @Override
