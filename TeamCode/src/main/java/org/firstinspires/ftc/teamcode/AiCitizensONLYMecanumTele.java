@@ -72,8 +72,8 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
 
     private double joyScale = 0.5;
 
-    private double precisionMin = 0.5;
-    private double precisionMax = 0.8;
+    private double precisionMin = 0.7;
+    private double precisionMax = 1.0;
 
     private double motorMax = 1;
 
@@ -126,9 +126,9 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
             LR = 0;
             RR = 0;
 
-            if (gamepad1.x) {
-                if (joyScale == precisionMin) joyScale = precisionMax; else joyScale = precisionMin;
-            }
+            if (gamepad1.x && joyScale == precisionMin) joyScale = precisionMax;
+            if (gamepad1.x && joyScale == precisionMax) joyScale = precisionMin;
+
 
             // Joystick values
             Y1 = -gamepad1.left_stick_y * joyScale;
