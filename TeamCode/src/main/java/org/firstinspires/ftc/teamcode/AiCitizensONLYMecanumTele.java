@@ -77,7 +77,9 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
 
     private double motorMax = 1;
 
-
+    //Tray servos
+    private Servo trayServo1 = null;
+    private Servo trayServo2 = null;
 
 
 
@@ -89,8 +91,6 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
         leftRearMotor = hardwareMap.dcMotor.get("leftRear");
         rightRearMotor = hardwareMap.dcMotor.get("rightRear");
 
-
-
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -101,6 +101,12 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
         leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        // Initialize tray servos
+        trayServo1 = hardwareMap.get(Servo.class, "tray_servo_1");
+        trayServo2 = hardwareMap.get(Servo.class, "tray_servo_2");
+
+        trayServo1.setDirection(Servo.Direction.FORWARD);
+        trayServo2.setDirection(Servo.Direction.REVERSE);
 
     }
 
@@ -129,6 +135,18 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
             if (gamepad1.x && joyScale == precisionMin) joyScale = precisionMax;
             if (gamepad1.x && joyScale == precisionMax) joyScale = precisionMin;
 
+            boolean closeTray = gamepad1.left_bumper;
+            boolean openTray = gamepad1.right_bumper;
+
+            if(openTray){
+                trayServo1.setPosition(0.5);
+                trayServo2.setPosition(0.5);
+            }
+
+            if(closeTray){
+                trayServo1.setPosition(0);
+                trayServo2.setPosition(0);
+            }
 
             // Joystick values
             Y1 = -gamepad1.left_stick_y * joyScale;
