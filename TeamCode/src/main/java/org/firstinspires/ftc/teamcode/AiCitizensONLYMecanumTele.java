@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="ONLY MECANUM TELE", group="Linear Opmode")
+@TeleOp(name="NEW MECANUM TELE", group="Linear Opmode")
 //@Disabled
 public class AiCitizensONLYMecanumTele extends LinearOpMode {
 
