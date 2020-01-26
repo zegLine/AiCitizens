@@ -159,35 +159,19 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
             int k=1;
             boolean detected=false;
 
-            leftFrontMotor.setPower(1);
-            rightFrontMotor.setPower(1);
-            leftRearMotor.setPower(1);
-            rightRearMotor.setPower(1);
-
-            sleep(500);
+            moveForward(500, 1);
 
             while(k<=3){
                 if(detectionSkyStone<2){
-                    leftFrontMotor.setPower(1);
-                    rightFrontMotor.setPower(1);
-                    leftRearMotor.setPower(1);
-                    rightRearMotor.setPower(1);
-                    sleep(150);
+
+                    moveForward(150, 1);
 
                     lowarmUp.setPosition(0.25);
                     lowarmDown.setPosition(-1);
 
-                    leftFrontMotor.setPower(-1);
-                    rightFrontMotor.setPower(-1);
-                    leftRearMotor.setPower(-1);
-                    rightRearMotor.setPower(-1);
-                    sleep(200);
+                  moveBackward(300,1);
 
-                    leftFrontMotor.setPower(1);
-                    rightFrontMotor.setPower(-1);
-                    leftRearMotor.setPower(-1);
-                    rightRearMotor.setPower(1);
-                    sleep(2000);
+                  moveRight(2000,1);
 
                     trayservo1.setPosition(-0.5);
                     trayservo2.setPosition(1);
@@ -195,80 +179,43 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
 
                     if(k==1)
                     {
-                        leftFrontMotor.setPower(-1);
-                        rightFrontMotor.setPower(1);
-                        leftRearMotor.setPower(1);
-                        rightRearMotor.setPower(-1);
-                        sleep(3000);
-
+                        moveLeft(3000,1);
                         leftFrontMotor.setPower(0);
                         rightFrontMotor.setPower(0);
                         leftRearMotor.setPower(0);
                         rightRearMotor.setPower(0);
 
-                        leftFrontMotor.setPower(1);
-                        rightFrontMotor.setPower(1);
-                        leftRearMotor.setPower(1);
-                        rightRearMotor.setPower(1);
-                        sleep(200);
+                        moveForward(200,1);
 
                         lowarmUp.setPosition(0.25);
                         lowarmDown.setPosition(-1);
 
-                        leftFrontMotor.setPower(-1);
-                        rightFrontMotor.setPower(-1);
-                        leftRearMotor.setPower(-1);
-                        rightRearMotor.setPower(-1);
-                        sleep(200);
+                        moveBackward(200,1);
 
-                        leftFrontMotor.setPower(1);
-                        rightFrontMotor.setPower(-1);
-                        leftRearMotor.setPower(-1);
-                        rightRearMotor.setPower(1);
-                        sleep(3000);
+                        moveRight(3100,1);
 
                         lowarmUp.setPosition(-0.5);
                         lowarmDown.setPosition(1);
 
 
-
-
-
-
                     }
 
                     if(k==2) {
-                        leftFrontMotor.setPower(-1);
-                        rightFrontMotor.setPower(1);
-                        leftRearMotor.setPower(1);
-                        rightRearMotor.setPower(-1);
-                        sleep(3000);
+                        moveLeft(3200,1);
 
                         leftFrontMotor.setPower(0);
                         rightFrontMotor.setPower(0);
                         leftRearMotor.setPower(0);
                         rightRearMotor.setPower(0);
 
-                        leftFrontMotor.setPower(1);
-                        rightFrontMotor.setPower(1);
-                        leftRearMotor.setPower(1);
-                        rightRearMotor.setPower(1);
-                        sleep(200);
+                        moveForward(200,1);
 
                         trayservo1.setPosition(0.25);
                         trayservo2.setPosition(-1);
 
-                        leftFrontMotor.setPower(-1);
-                        rightFrontMotor.setPower(-1);
-                        leftRearMotor.setPower(-1);
-                        rightRearMotor.setPower(-1);
-                        sleep(200);
+                       moveBackward(200,1);
 
-                        leftFrontMotor.setPower(1);
-                        rightFrontMotor.setPower(-1);
-                        leftRearMotor.setPower(-1);
-                        rightRearMotor.setPower(1);
-                        sleep(3500);
+                        moveRight(3500,1);
 
                         lowarmUp.setPosition(-0.5);
                         lowarmDown.setPosition(1);
@@ -276,37 +223,21 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
 
                     if(k==3)
                     {
-                        leftFrontMotor.setPower(-1);
-                        rightFrontMotor.setPower(1);
-                        leftRearMotor.setPower(1);
-                        rightRearMotor.setPower(-1);
-                        sleep(3000);
+                        moveLeft(3300,1);
 
                         leftFrontMotor.setPower(0);
                         rightFrontMotor.setPower(0);
                         leftRearMotor.setPower(0);
                         rightRearMotor.setPower(0);
 
-                        leftFrontMotor.setPower(1);
-                        rightFrontMotor.setPower(1);
-                        leftRearMotor.setPower(1);
-                        rightRearMotor.setPower(1);
-                        sleep(200);
+                       moveForward(200,1);
 
                         lowarmUp.setPosition(0.25);
                         lowarmDown.setPosition(-1);
 
-                        leftFrontMotor.setPower(-1);
-                        rightFrontMotor.setPower(-1);
-                        leftRearMotor.setPower(-1);
-                        rightRearMotor.setPower(-1);
-                        sleep(200);
+                        moveBackward(200,1);
 
-                        leftFrontMotor.setPower(1);
-                        rightFrontMotor.setPower(-1);
-                        leftRearMotor.setPower(-1);
-                        rightRearMotor.setPower(1);
-                        sleep(3700);
+                        moveRight(3700,1);
 
                         lowarmUp.setPosition(-0.5);
                         lowarmDown.setPosition(1);
@@ -317,11 +248,7 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
 
                 }
                 else{
-                    leftFrontMotor.setPower(-1);
-                    rightFrontMotor.setPower(1);
-                    leftRearMotor.setPower(1);
-                    rightRearMotor.setPower(-1);
-                    sleep(200);
+                    moveLeft(150,0.5);
                     k=k+1;
 
                 }
