@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.LibraryMecanumAuto;
 
 @Autonomous(name="AutonomousMecanumAll", group="Autonomous")
 
-public abstract class AutonomousMecanumAll extends LinearOpMode {
+public  class AutonomousMecanumAll extends LinearOpMode {
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
