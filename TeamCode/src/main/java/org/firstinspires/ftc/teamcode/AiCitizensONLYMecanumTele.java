@@ -81,7 +81,9 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
     private Servo trayServo1 = null;
     private Servo trayServo2 = null;
 
-
+    // Low arm servos
+    private Servo lowArmBottomServo = null;
+    private Servo lowArmHighServo = null;
 
 
     public void initializeAll() {
@@ -107,6 +109,13 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
 
         trayServo1.setDirection(Servo.Direction.FORWARD);
         trayServo2.setDirection(Servo.Direction.REVERSE);
+
+        // Initialize the low (bottom) arm
+        lowArmBottomServo = hardwareMap.get(Servo.class, "low_arm_bottom_servo");
+        lowArmHighServo = hardwareMap.get(Servo.class, "low_arm_high_servo");
+
+        lowArmBottomServo.setDirection(Servo.Direction.REVERSE);
+        lowArmHighServo.setDirection(Servo.Direction.FORWARD);
 
     }
 
@@ -135,17 +144,29 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
             if (gamepad1.x && joyScale == precisionMin) joyScale = precisionMax;
             if (gamepad1.x && joyScale == precisionMax) joyScale = precisionMin;
 
+            // Tray servos positions
             boolean closeTray = gamepad1.left_bumper;
             boolean openTray = gamepad1.right_bumper;
 
-            if(openTray){
+            if (openTray){
                 trayServo1.setPosition(0.5);
                 trayServo2.setPosition(0.5);
             }
 
-            if(closeTray){
+            if (closeTray){
                 trayServo1.setPosition(0);
                 trayServo2.setPosition(0);
+            }
+
+            // Calculate LOW ARM positions
+            if (gamepad2.y){
+                lowArmBottomServo.setPosition(0.25);
+                lowArmHighServo.setPosition(-1);
+            }
+
+            if (gamepad2.a){
+                lowArmBottomServo.setPosition(-0.5);
+                lowArmHighServo.setPosition(1);
             }
 
             // Joystick values
