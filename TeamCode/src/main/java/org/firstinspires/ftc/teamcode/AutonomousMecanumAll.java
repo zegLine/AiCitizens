@@ -19,14 +19,18 @@ import org.firstinspires.ftc.teamcode.LibraryMecanumAuto;
 
 public abstract class AutonomousMecanumAll extends LinearOpMode {
 
-     private DcMotor leftFrontMotor = null;
-     private DcMotor rightFrontMotor = null;
-     private DcMotor leftRearMotor = null;
-     private DcMotor rightRearMotor = null;
-     private Servo trayservo1 = null;
-     private Servo trayservo2 = null;
-     private Servo lowarmUp = null;
-     private Servo lowarmDown = null;
+    private DcMotor leftFrontMotor = null;
+    private DcMotor rightFrontMotor = null;
+    private DcMotor leftRearMotor = null;
+    private DcMotor rightRearMotor = null;
+
+    private Servo trayservo1 = null;
+    private Servo trayservo2 = null;
+
+    private Servo lowarmUp = null;
+    private Servo lowarmDown = null;
+
+    ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
 
     public void moveForward(long time, double power) {
 
@@ -90,17 +94,17 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
         sleep(time);
     }
 
+    public void grabStone() {
 
-// Initialize motors
+        moveForward(150, 1);
+        lowarmUp.setPosition(0.25);
+        lowarmDown.setPosition(-1);
+        moveBackward(300,1);
 
-
-    ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-
-
+    }
 
     @Override
     public void runOpMode() throws InterruptedException  {
-
 
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
         rightFrontMotor = hardwareMap.dcMotor.get("rigthFront");
@@ -112,7 +116,6 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
 
         trayservo1 = hardwareMap.servo.get("trayservo1");
         trayservo2 = hardwareMap.servo.get("trayservo2");
-
 
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -129,171 +132,86 @@ public abstract class AutonomousMecanumAll extends LinearOpMode {
         trayservo1.setPosition(0);
         trayservo2.setPosition(0);
 
-
-
         final double SCALE_FACTOR = 255;
         float hsvValues[] = {0F, 0F, 0F};
         final float values[] = hsvValues;
-
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-
-
-
-
-
             Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                     (int) (sensorColor.green() * SCALE_FACTOR),
                     (int) (sensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
+
             telemetry.addData("Alpha", sensorColor.alpha());
             telemetry.addData("Red  ", sensorColor.red());
             telemetry.addData("Green", sensorColor.green());
             telemetry.addData("Blue ", sensorColor.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
+            // Declared a normalization that, if black is under 2, if yellow is over 2
             int detectionSkyStone = (sensorColor.red() * sensorColor.green()) / (sensorColor.blue() * sensorColor.blue());
-            int k=1;
-            boolean detected=false;
+            int currentStonePos;
+
+            long timeToMoveRight = 3000;
+            long timeAddedSecondSS = 400;
 
             moveForward(500, 1);
 
-            while(k<=3){
-                if(detectionSkyStone<2){
+            if (detectionSkyStone <= 2) {
+                // first stone
 
-                    moveForward(150, 1);
+                grabStone();
 
-                    lowarmUp.setPosition(0.25);
-                    lowarmDown.setPosition(-1);
+                currentStonePos = 1;
 
-                  moveBackward(300,1);
+            } else {
 
-                  moveRight(2000,1);
+                moveLeft(150, 1);
 
-                    trayservo1.setPosition(-0.5);
-                    trayservo2.setPosition(1);
+                if (detectionSkyStone <= 2) {
+                    // second stone
 
+                    grabStone();
 
-                    if(k==1)
-                    {
-                        moveLeft(3000,1);
-                        leftFrontMotor.setPower(0);
-                        rightFrontMotor.setPower(0);
-                        leftRearMotor.setPower(0);
-                        rightRearMotor.setPower(0);
+                    currentStonePos = 2;
 
-                        moveForward(200,1);
+                } else {
+                    // third stone
 
-                        lowarmUp.setPosition(0.25);
-                        lowarmDown.setPosition(-1);
+                    moveLeft(150, 1);
 
-                        moveBackward(200,1);
+                    grabStone();
 
-                        moveRight(3100,1);
-
-                        lowarmUp.setPosition(-0.5);
-                        lowarmDown.setPosition(1);
-
-
-                    }
-
-                    if(k==2) {
-                        moveLeft(3200,1);
-
-                        leftFrontMotor.setPower(0);
-                        rightFrontMotor.setPower(0);
-                        leftRearMotor.setPower(0);
-                        rightRearMotor.setPower(0);
-
-                        moveForward(200,1);
-
-                        trayservo1.setPosition(0.25);
-                        trayservo2.setPosition(-1);
-
-                       moveBackward(200,1);
-
-                        moveRight(3500,1);
-
-                        lowarmUp.setPosition(-0.5);
-                        lowarmDown.setPosition(1);
-                    }
-
-                    if(k==3)
-                    {
-                        moveLeft(3300,1);
-
-                        leftFrontMotor.setPower(0);
-                        rightFrontMotor.setPower(0);
-                        leftRearMotor.setPower(0);
-                        rightRearMotor.setPower(0);
-
-                       moveForward(200,1);
-
-                        lowarmUp.setPosition(0.25);
-                        lowarmDown.setPosition(-1);
-
-                        moveBackward(200,1);
-
-                        moveRight(3700,1);
-
-                        lowarmUp.setPosition(-0.5);
-                        lowarmDown.setPosition(1);
-                    }
-
-
-
+                    currentStonePos = 3;
 
                 }
-                else{
-                    moveLeft(150,0.5);
-                    k=k+1;
 
-                }
             }
+
+            // calculate the time to move right based on witch stone was grabbed
+            timeToMoveRight += 200 * currentStonePos;
+
+            moveRight(timeToMoveRight,1);
 
             lowarmUp.setPosition(-0.5);
             lowarmDown.setPosition(1);
 
-            leftFrontMotor.setPower(-1);
-            rightFrontMotor.setPower(-1);
-            leftRearMotor.setPower(-1);
-            rightRearMotor.setPower(-1);
-            sleep(400);
+            // calculate the time to come back and grab the second skystone based on time right
+            moveLeft(timeToMoveRight + 400, 1);
+            grabStone();
 
-            leftFrontMotor.setPower(-1);
-            rightFrontMotor.setPower(1);
-            leftRearMotor.setPower(-1);
-            rightRearMotor.setPower(1);
-
-            sleep(800);
-
-            trayservo1.setPosition(0.5);
-            trayservo2.setPosition(-0.5);
-
-
-
-
-
-
-
-
-
-
-
-
+            // update the time to move right
+            timeToMoveRight += timeAddedSecondSS;
+            moveRight(timeToMoveRight,1);
 
         }
 
-
-
-
     }
 
-
-    }
+}
 
 
 
