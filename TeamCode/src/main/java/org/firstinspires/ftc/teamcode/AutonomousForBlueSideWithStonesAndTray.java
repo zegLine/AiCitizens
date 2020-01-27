@@ -197,10 +197,10 @@ public  class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
 
             }
 
-            // calculate the time to move right based on witch stone was grabbed
+            // calculate the time to move left based on which stone was grabbed
             timeToMoveLeft += 200 * currentStonePos;
 
-            moveRight(timeToMoveLeft,1);
+            moveLeft(timeToMoveLeft,1);
 
             lowarmUp.setPosition(-0.5);
             lowarmDown.setPosition(1);
@@ -209,19 +209,21 @@ public  class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
             moveRight(timeToMoveLeft + 400, 1);
             grabStone();
 
-            // update the time to move right
+            // update the time to move left
             timeToMoveLeft += timeAddedSecondSS;
-            moveRight(timeToMoveLeft,1);
 
+            moveLeft(timeToMoveLeft,1);
+
+            lowarmUp.setPosition(-0.5);
+            lowarmDown.setPosition(1);
 
             //start moving tray
 
-            moveBackward(500,1);
-            moveLeft(1300,1);
             moveForward(700,1);
             grabtray();
             turnLeft(600,1);
             moveForward(500,1);
+            opentray();
             moveBackward(1000,1);
 
 

@@ -29,8 +29,6 @@ public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
     private Servo lowarmUp = null;
     private Servo lowarmDown = null;
 
-    ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
-
     public void moveForward(long time, double power) {
 
         leftFrontMotor.setPower(power);
@@ -129,6 +127,8 @@ public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
         trayservo1 = hardwareMap.servo.get("trayservo1");
         trayservo2 = hardwareMap.servo.get("trayservo2");
 
+        ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -144,9 +144,9 @@ public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
         trayservo1.setPosition(0);
         trayservo2.setPosition(0);
 
-        final double SCALE_FACTOR = 255;
         float hsvValues[] = {0F, 0F, 0F};
         final float values[] = hsvValues;
+        final double SCALE_FACTOR = 255;
 
         waitForStart();
 
@@ -203,7 +203,10 @@ public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
 
             }
 
-            // calculate the time to move right based on witch stone was grabbed
+
+            moveBackward(500,1);
+
+            // calculate the time to move right based on which stone was grabbed
             timeToMoveRight += 200 * currentStonePos;
 
             moveRight(timeToMoveRight,1);
@@ -217,17 +220,21 @@ public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
 
             // update the time to move right
             timeToMoveRight += timeAddedSecondSS;
+
             moveRight(timeToMoveRight,1);
+
+            lowarmUp.setPosition(-0.5);
+            lowarmDown.setPosition(1);
 
 
             //start moving tray
 
-            moveBackward(500,1);
-            moveRight(1300,1);
+
             moveForward(700,1);
             grabtray();
             turnRight(600,1);
             moveForward(500,1);
+            opentray();
             moveBackward(1000,1);
 
 
