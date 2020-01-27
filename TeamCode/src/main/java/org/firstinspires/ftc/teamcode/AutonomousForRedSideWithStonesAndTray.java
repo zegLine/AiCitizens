@@ -14,9 +14,9 @@ import java.util.Locale;
 
 import org.firstinspires.ftc.teamcode.LibraryMecanumAuto;
 
-@Autonomous(name="AutonomousMecanumAll", group="Autonomous")
+@Autonomous(name="AutonomousForRedSideWithStonesAndTray", group="Autonomous")
 
-public  class AutonomousMecanumAll extends LinearOpMode {
+public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -100,6 +100,19 @@ public  class AutonomousMecanumAll extends LinearOpMode {
         lowarmDown.setPosition(-1);
         moveBackward(300,1);
 
+    }
+
+    public void grabtray(){
+
+        trayservo1.setPosition(1);
+        trayservo2.setPosition(1);
+
+    }
+
+    public void opentray(){
+
+        trayservo1.setPosition(0);
+        trayservo2.setPosition(0);
     }
 
     @Override
@@ -205,6 +218,20 @@ public  class AutonomousMecanumAll extends LinearOpMode {
             // update the time to move right
             timeToMoveRight += timeAddedSecondSS;
             moveRight(timeToMoveRight,1);
+
+
+            //start moving tray
+
+            moveBackward(500,1);
+            moveRight(1300,1);
+            moveForward(700,1);
+            grabtray();
+            turnRight(600,1);
+            moveForward(500,1);
+            moveBackward(1000,1);
+
+
+
 
         }
 
