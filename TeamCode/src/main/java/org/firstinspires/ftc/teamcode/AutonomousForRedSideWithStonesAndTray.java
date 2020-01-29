@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -28,6 +29,9 @@ public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
 
     private Servo lowarmUp = null;
     private Servo lowarmDown = null;
+
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
 
     public void moveForward(long time, double power) {
 
@@ -127,8 +131,6 @@ public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
         trayservo1 = hardwareMap.servo.get("trayservo1");
         trayservo2 = hardwareMap.servo.get("trayservo2");
 
-        ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -143,6 +145,9 @@ public  class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
         lowarmDown.setPosition(1);
         trayservo1.setPosition(0);
         trayservo2.setPosition(0);
+
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
         float hsvValues[] = {0F, 0F, 0F};
         final float values[] = hsvValues;

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name="AutonomousForRedSideWithStonesAndTray", group="Autonomous")
@@ -23,7 +24,8 @@ public  class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
     private Servo lowarmUp = null;
     private Servo lowarmDown = null;
 
-    ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
 
     public void moveForward(long time, double power) {
 
@@ -137,6 +139,9 @@ public  class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
         lowarmDown.setPosition(1);
         trayservo1.setPosition(0);
         trayservo2.setPosition(0);
+
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
         final double SCALE_FACTOR = 255;
         float hsvValues[] = {0F, 0F, 0F};
