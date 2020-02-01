@@ -104,20 +104,24 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
         rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Initialize tray servos
-        trayServo1 = hardwareMap.get(Servo.class, "tray_servo_1");
-        trayServo2 = hardwareMap.get(Servo.class, "tray_servo_2");
+        trayServo1 = hardwareMap.get(Servo.class, "trayservo1");
+        trayServo2 = hardwareMap.get(Servo.class, "trayservo2");
 
         trayServo1.setDirection(Servo.Direction.FORWARD);
         trayServo2.setDirection(Servo.Direction.REVERSE);
 
         // Initialize the low (bottom) arm
-        lowArmBottomServo = hardwareMap.get(Servo.class, "low_arm_bottom_servo");
-        lowArmHighServo = hardwareMap.get(Servo.class, "low_arm_high_servo");
+        lowArmBottomServo = hardwareMap.get(Servo.class, "lowarmDown");
+        lowArmHighServo = hardwareMap.get(Servo.class, "lowarmUp");
 
         lowArmBottomServo.setDirection(Servo.Direction.REVERSE);
         lowArmHighServo.setDirection(Servo.Direction.FORWARD);
 
-    }
+
+
+        }
+
+
 
     @Override
     public void runOpMode() {
@@ -130,6 +134,8 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+
 
 
         // run until the end of the match (driver presses STOP)
@@ -160,13 +166,18 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
 
             // Calculate LOW ARM positions
             if (gamepad2.y){
-                lowArmBottomServo.setPosition(0.25);
+                lowArmBottomServo.setPosition(0.7);
                 lowArmHighServo.setPosition(-1);
             }
 
             if (gamepad2.a){
                 lowArmBottomServo.setPosition(-0.5);
                 lowArmHighServo.setPosition(1);
+            }
+
+            if(gamepad2.x){
+                lowArmBottomServo.setPosition(0);
+                lowArmHighServo.setPosition(0);
             }
 
             // Joystick values
