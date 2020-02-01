@@ -9,9 +9,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
+
+import org.firstinspires.ftc.teamcode.LibraryMecanumAuto;
+
 @Autonomous(name="AutonomousForRedSideWithStonesAndTray", group="Autonomous")
 
-public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
+public class AutonomousForRedSideWithStonesAndTray extends LinearOpMode {
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -143,9 +149,9 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
-        final double SCALE_FACTOR = 255;
         float hsvValues[] = {0F, 0F, 0F};
         final float values[] = hsvValues;
+        final double SCALE_FACTOR = 255;
 
         waitForStart();
 
@@ -166,7 +172,7 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
             int detectionSkyStone = (sensorColor.red() * sensorColor.green()) / (sensorColor.blue() * sensorColor.blue());
             int currentStonePos;
 
-            long timeToMoveLeft = 3000;
+            long timeToMoveRight = 3000;
             long timeAddedSecondSS = 400;
 
             moveForward(500, 1);
@@ -180,7 +186,7 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
 
             } else {
 
-                moveRight(150, 1);
+                moveLeft(150, 1);
 
                 if (detectionSkyStone <= 2) {
                     // second stone
@@ -192,7 +198,7 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
                 } else {
                     // third stone
 
-                    moveRight(150, 1);
+                    moveLeft(150, 1);
 
                     grabStone();
 
@@ -202,31 +208,36 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
 
             }
 
-            // calculate the time to move left based on which stone was grabbed
-            timeToMoveLeft += 200 * currentStonePos;
 
-            moveLeft(timeToMoveLeft,1);
+            moveBackward(500,1);
+
+            // calculate the time to move right based on which stone was grabbed
+            timeToMoveRight += 200 * currentStonePos;
+
+            moveRight(timeToMoveRight,1);
 
             lowarmUp.setPosition(-0.5);
             lowarmDown.setPosition(1);
 
             // calculate the time to come back and grab the second skystone based on time right
-            moveRight(timeToMoveLeft + 400, 1);
+            moveLeft(timeToMoveRight + 400, 1);
             grabStone();
 
-            // update the time to move left
-            timeToMoveLeft += timeAddedSecondSS;
+            // update the time to move right
+            timeToMoveRight += timeAddedSecondSS;
 
-            moveLeft(timeToMoveLeft,1);
+            moveRight(timeToMoveRight,1);
 
             lowarmUp.setPosition(-0.5);
             lowarmDown.setPosition(1);
 
+
             //start moving tray
+
 
             moveForward(700,1);
             grabtray();
-            turnLeft(600,1);
+            turnRight(600,1);
             moveForward(500,1);
             opentray();
             moveBackward(1000,1);
