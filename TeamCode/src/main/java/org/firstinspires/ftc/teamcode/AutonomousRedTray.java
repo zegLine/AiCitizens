@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousForRedSideWithStonesAndTray", group="Autonomous")
+@Autonomous(name="AutonomousRedStonesandTray", group="Autonomous")
 
-public  class AutonomousForRedSideAllStones extends LinearOpMode {
+public  class AutonomousRedTray extends LinearOpMode {
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -23,7 +20,7 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
     private Servo lowarmUp = null;
     private Servo lowarmDown = null;
 
-    ColorSensor sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+
 
     public void moveForward(long time, double power) {
 
@@ -37,7 +34,7 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
 
     public void moveBackward(long time, double power) {
 
-        power -= power;
+        power = -power;
 
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(power);
@@ -49,8 +46,8 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
 
     public void moveLeft(long time, double power) {
 
-        leftFrontMotor.setPower(power);
-        rightFrontMotor.setPower(-power);
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
 
@@ -59,8 +56,8 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
 
     public void moveRight(long time, double power) {
 
-        leftFrontMotor.setPower(-power);
-        rightFrontMotor.setPower(power);
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
 
@@ -71,8 +68,8 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
 
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
-        leftRearMotor.setPower(power);
-        rightRearMotor.setPower(-power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(power);
 
         sleep(time);
     }
@@ -81,17 +78,19 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
 
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
-        leftRearMotor.setPower(-power);
-        rightRearMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(-power);
 
         sleep(time);
     }
 
     public void grabStone() {
 
-        lowarmUp.setPosition(0.25);
+        lowarmUp.setPosition(0.7);
         lowarmDown.setPosition(-1);
+        sleep(300);
 
+        lowarmDown.setPosition(-0.7);
 
     }
 
@@ -103,22 +102,22 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
 
     public void grabtray(){
 
-        trayservo1.setPosition(1);
-        trayservo2.setPosition(1);
+        trayservo1.setPosition(0.1);
+        trayservo2.setPosition(0.1);
 
     }
 
     public void opentray(){
 
-        trayservo1.setPosition(0);
-        trayservo2.setPosition(0);
+        trayservo1.setPosition(1);
+        trayservo2.setPosition(1);
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
-        rightFrontMotor = hardwareMap.dcMotor.get("rigthFront");
+        rightFrontMotor = hardwareMap.dcMotor.get("rightFront");
         leftRearMotor = hardwareMap.dcMotor.get("leftRear");
         rightRearMotor = hardwareMap.dcMotor.get("rightRear");
 
@@ -138,40 +137,35 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
         leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        trayservo1.setDirection(Servo.Direction.FORWARD);
+        trayservo2.setDirection(Servo.Direction.REVERSE);
+
         lowarmUp.setPosition(-0.5);
         lowarmDown.setPosition(1);
-        trayservo1.setPosition(0);
-        trayservo2.setPosition(0);
+        trayservo1.setPosition(0.5);
+        trayservo2.setPosition(0.5);
 
 
-        while(opModeIsActive()) {
-
-            int CurrentPosition=1;
-            int StoneTime = 150;
-
-            while(CurrentPosition<=6){
-
-                moveForward(650,1);
-                grabStone();
-                moveBackward(500,1);
-                moveRight(1200+CurrentPosition*StoneTime,1);
-                releaseStone();
-                if(CurrentPosition == 6)
-                    break;
-                moveLeft(1200+CurrentPosition*StoneTime,1);
-                CurrentPosition=CurrentPosition+1;
+        waitForStart();
 
 
-            }
 
-            moveBackward(400,1);
-            moveRight(700,1);
-            moveForward(450,1);
-            grabtray();
-            turnRight(600,1);
-            moveForward(500,1);
-            opentray();
-            moveBackward(1100,1);
+        moveRight(700,1);
+        moveForward(1410,0.5);
+        moveForward(300,0.1);
+        moveForward(650,0);
+        grabtray();
+        moveForward(500,0);
+        moveForward(800,0);
+        moveBackward(1320,1);
+        turnRight(1500,1);
+        moveForward(800,1);
+        moveForward(400,0);
+
+        opentray();
+        moveForward(350,0);
+        moveBackward(1200,1);
+        moveRight(500,1);
 
 
 
@@ -179,7 +173,8 @@ public  class AutonomousForRedSideAllStones extends LinearOpMode {
 
 
 
-        }
+
+
 
 
     }
