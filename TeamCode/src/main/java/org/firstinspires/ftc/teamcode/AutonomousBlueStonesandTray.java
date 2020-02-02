@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousRedStonesandTray", group="Autonomous")
+@Autonomous(name="AutonomousBlueStonesandTray", group="Autonomous")
 
 public  class AutonomousBlueStonesandTray extends LinearOpMode {
 
@@ -44,7 +47,7 @@ public  class AutonomousBlueStonesandTray extends LinearOpMode {
         sleep(time);
     }
 
-    public void moveLeft(long time, double power) {
+    public void moveRight(long time, double power) {
 
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
@@ -54,7 +57,7 @@ public  class AutonomousBlueStonesandTray extends LinearOpMode {
         sleep(time);
     }
 
-    public void moveRight(long time, double power) {
+    public void moveLeft(long time, double power) {
 
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
@@ -64,7 +67,7 @@ public  class AutonomousBlueStonesandTray extends LinearOpMode {
         sleep(time);
     }
 
-    public void turnLeft(long time, double power) {
+    public void turnRight(long time, double power) {
 
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
@@ -74,7 +77,7 @@ public  class AutonomousBlueStonesandTray extends LinearOpMode {
         sleep(time);
     }
 
-    public void turnRight(long time, double power) {
+    public void turnLeft(long time, double power) {
 
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
@@ -86,18 +89,19 @@ public  class AutonomousBlueStonesandTray extends LinearOpMode {
 
     public void grabStone() {
 
-        lowarmUp.setPosition(0.7);
-        lowarmDown.setPosition(-1);
-        sleep(300);
 
-        lowarmDown.setPosition(-0.7);
+        lowarmUp.setPosition(-0.5);
+        lowarmDown.setPosition(1);
+
+
 
     }
 
     public void releaseStone(){
 
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
+
+        lowarmUp.setPosition(0.25);
+        lowarmDown.setPosition(-1);
     }
 
     public void grabtray(){
@@ -139,9 +143,8 @@ public  class AutonomousBlueStonesandTray extends LinearOpMode {
 
         trayservo1.setDirection(Servo.Direction.FORWARD);
         trayservo2.setDirection(Servo.Direction.REVERSE);
-
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
+        lowarmUp.setPosition(-1);
+        lowarmDown.setPosition(0.25);
         trayservo1.setPosition(0.5);
         trayservo2.setPosition(0.5);
 
@@ -160,14 +163,14 @@ public  class AutonomousBlueStonesandTray extends LinearOpMode {
 
             moveBackward(610,1);
 
-            moveLeft(1750+CurrentPosition*StoneTime,1);
+            moveRight(1750+CurrentPosition*StoneTime,1);
 
             releaseStone();
-            turnLeft(115,0.7);
+            turnRight(115,0.7);
             moveForward(800,0);
             if(CurrentPosition == 2)
                 break;
-            moveRight(1900+CurrentPosition*StoneTime,1);
+            moveLeft(1900+CurrentPosition*StoneTime,1);
             CurrentPosition=CurrentPosition+1;
 
             moveForward(200, 1);
@@ -175,24 +178,23 @@ public  class AutonomousBlueStonesandTray extends LinearOpMode {
 
         }
 
-        moveLeft(700,1);
-        moveForward(1210,0.5);
+        moveRight(500,1);
+        moveForward(1410,0.5);
         moveForward(300,0.1);
         moveForward(650,0);
         grabtray();
         moveForward(500,0);
-        turnLeft(500,0.5);
+        turnRight(500,0.5);
         moveForward(800,0);
-        moveBackward(1320,1);
-        turnLeft(1500,1);
+        moveBackward(1320,0.7);
+        turnRight(1600,1);
         moveForward(800,1);
         moveForward(400,0);
 
-
         opentray();
         moveForward(350,0);
-        moveBackward(1200,1);
-        moveLeft(500,1);
+        moveBackward(1000,0.5);
+        moveRight(500,1);
 
 
 

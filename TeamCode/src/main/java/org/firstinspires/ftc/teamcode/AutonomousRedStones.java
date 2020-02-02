@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousRedStonesandTray", group="Autonomous")
+@Autonomous(name="AutonomousRedStones", group="Autonomous")
 
 public  class AutonomousRedStones extends LinearOpMode {
 
@@ -86,18 +89,20 @@ public  class AutonomousRedStones extends LinearOpMode {
 
     public void grabStone() {
 
-        lowarmUp.setPosition(0.7);
-        lowarmDown.setPosition(-1);
-        sleep(300);
 
-        lowarmDown.setPosition(-0.7);
+
+
+        lowarmUp.setPosition(-0.5);
+        lowarmDown.setPosition(1);
+
 
     }
 
     public void releaseStone(){
 
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
+        lowarmUp.setPosition(0.7);
+        lowarmDown.setPosition(-1);
+
     }
 
     public void grabtray(){
@@ -132,6 +137,8 @@ public  class AutonomousRedStones extends LinearOpMode {
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
 
+
+
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -140,10 +147,11 @@ public  class AutonomousRedStones extends LinearOpMode {
         trayservo1.setDirection(Servo.Direction.FORWARD);
         trayservo2.setDirection(Servo.Direction.REVERSE);
 
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
+        lowarmUp.setPosition(0.7);
+        lowarmDown.setPosition(-1);
         trayservo1.setPosition(0.5);
         trayservo2.setPosition(0.5);
+
 
 
         waitForStart();
@@ -151,23 +159,22 @@ public  class AutonomousRedStones extends LinearOpMode {
         int CurrentPosition=1;
         int StoneTime = 50;
 
-        while(CurrentPosition<=3){
+        while(CurrentPosition<=1){
 
-            moveForward(610,1);
+            moveForward(520,1);
             moveForward(300,0);
             grabStone();
             moveForward(800,0);
 
-            moveBackward(610,1);
+            moveBackward(600,0.6);
 
-            moveRight(1750+CurrentPosition*StoneTime,1);
-
+            moveRight(1300+CurrentPosition*StoneTime,1);
+            turnRight(100,0.3);
             releaseStone();
-            turnRight(115,0.7);
             moveForward(800,0);
-            if(CurrentPosition == 3)
+            if(CurrentPosition == 1)
                 break;
-            moveLeft(1900+CurrentPosition*StoneTime,1);
+            moveLeft(1400+CurrentPosition*StoneTime,1);
             CurrentPosition=CurrentPosition+1;
 
             moveForward(200, 1);
@@ -175,8 +182,8 @@ public  class AutonomousRedStones extends LinearOpMode {
 
         }
 
-        moveLeft(750,0.7);
-        moveBackward(200,0.5);
+             moveLeft(400,0.6);
+        moveForward(300,0.6);
 
 
 

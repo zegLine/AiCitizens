@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousRedStonesandTray", group="Autonomous")
+@Autonomous(name="AutonomousRedTray", group="Autonomous")
 
 public  class AutonomousRedTray extends LinearOpMode {
 
@@ -140,8 +140,8 @@ public  class AutonomousRedTray extends LinearOpMode {
         trayservo1.setDirection(Servo.Direction.FORWARD);
         trayservo2.setDirection(Servo.Direction.REVERSE);
 
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
+        lowarmUp.setPosition(1);
+        lowarmDown.setPosition(-0.5);
         trayservo1.setPosition(0.5);
         trayservo2.setPosition(0.5);
 
@@ -150,22 +150,24 @@ public  class AutonomousRedTray extends LinearOpMode {
 
 
 
-        moveRight(700,1);
+        moveRight(500,1);
         moveForward(1410,0.5);
         moveForward(300,0.1);
         moveForward(650,0);
         grabtray();
         moveForward(500,0);
+        turnRight(500,0.5);
         moveForward(800,0);
-        moveBackward(1320,1);
-        turnRight(1500,1);
+        moveBackward(1320,0.7);
+        turnRight(1600,1);
         moveForward(800,1);
         moveForward(400,0);
 
         opentray();
         moveForward(350,0);
-        moveBackward(1200,1);
         moveRight(500,1);
+        moveBackward(1000,0.5);
+
 
 
 

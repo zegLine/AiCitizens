@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousRedStonesandTray", group="Autonomous")
+@Autonomous(name="AutonomousUniversalParkNearWall", group="Autonomous")
 
 public  class AutonomousUniversalParkNearWall extends LinearOpMode {
 
@@ -150,7 +150,7 @@ public  class AutonomousUniversalParkNearWall extends LinearOpMode {
 
 
 
-        moveForward(300,0.5);
+        moveForward(600,0.5);
 
 
 

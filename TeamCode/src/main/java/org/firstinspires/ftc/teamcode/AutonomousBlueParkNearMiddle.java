@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousRedStonesandTray", group="Autonomous")
+@Autonomous(name="AutonomousBlueParkNearMiddle", group="Autonomous")
 
 public  class AutonomousBlueParkNearMiddle extends LinearOpMode {
 

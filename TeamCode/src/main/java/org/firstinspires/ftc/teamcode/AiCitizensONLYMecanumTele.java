@@ -160,13 +160,13 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
             }
 
             if (closeTray){
-                trayServo1.setPosition(0);
-                trayServo2.setPosition(0);
+                trayServo1.setPosition(0.1);
+                trayServo2.setPosition(0.1);
             }
 
             // Calculate LOW ARM positions
             if (gamepad2.y){
-                lowArmBottomServo.setPosition(0.7);
+                lowArmBottomServo.setPosition(0.25);
                 lowArmHighServo.setPosition(-1);
             }
 
@@ -176,9 +176,12 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
             }
 
             if(gamepad2.x){
-                lowArmBottomServo.setPosition(0);
-                lowArmHighServo.setPosition(0);
+                lowArmBottomServo.setPosition(-1);
+                lowArmHighServo.setPosition(1);
+
             }
+
+
 
             // Joystick values
             Y1 = -gamepad1.left_stick_y * joyScale;
