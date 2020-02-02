@@ -151,7 +151,7 @@ public  class AutonomousBlueStones extends LinearOpMode {
         int CurrentPosition=1;
         int StoneTime = 50;
 
-        while(CurrentPosition<=2){
+        while(CurrentPosition<=3){
 
             moveForward(610,1);
             moveForward(300,0);
@@ -165,7 +165,7 @@ public  class AutonomousBlueStones extends LinearOpMode {
             releaseStone();
             turnLeft(115,0.7);
             moveForward(800,0);
-            if(CurrentPosition == 2)
+            if(CurrentPosition == 3)
                 break;
             moveRight(1900+CurrentPosition*StoneTime,1);
             CurrentPosition=CurrentPosition+1;

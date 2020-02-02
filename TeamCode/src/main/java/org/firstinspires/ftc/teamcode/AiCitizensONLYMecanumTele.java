@@ -70,7 +70,7 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
     private double RF, LF, RR, LR;
     private double X1, Y1, X2, Y2;
 
-    private double joyScale = 0.5;
+    private double joyScale = 0.7;
 
     private double precisionMin = 0.7;
     private double precisionMax = 1.0;
@@ -111,8 +111,8 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
         trayServo2.setDirection(Servo.Direction.REVERSE);
 
         // Initialize the low (bottom) arm
-        lowArmBottomServo = hardwareMap.get(Servo.class, "lowarmDown");
-        lowArmHighServo = hardwareMap.get(Servo.class, "lowarmUp");
+        lowArmBottomServo = hardwareMap.get(Servo.class, "lowarmdown");
+        lowArmHighServo = hardwareMap.get(Servo.class, "lowarmup");
 
         lowArmBottomServo.setDirection(Servo.Direction.REVERSE);
         lowArmHighServo.setDirection(Servo.Direction.FORWARD);
