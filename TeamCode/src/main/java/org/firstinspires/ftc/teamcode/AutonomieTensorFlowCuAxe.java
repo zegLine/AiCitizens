@@ -53,10 +53,10 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "AutonomieTensorFlow", group = "Autonomous")
+@Autonomous(name = "AutonomieTensorFlowCuAxe", group = "Autonomous")
 
 
-public class AutonomieTensorFlow extends LinearOpMode {
+public class AutonomieTensorFlowCuAxe extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
@@ -64,6 +64,12 @@ public class AutonomieTensorFlow extends LinearOpMode {
     double Circumference = 3.1415*3.93701;
     int SkyStonePosition;
     boolean Found = false;
+    double tilesize = 22.75;
+    double X=0;
+    double Y=0;
+    int Orientation;
+    boolean grabbed=false;
+    double SkyStoneSize=0.25;
 
 
     private DcMotor leftFrontMotor = null;
@@ -87,7 +93,7 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        double rotationsNeeded = distance/Circumference;
+        double rotationsNeeded = (distance*tilesize)/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
@@ -102,6 +108,23 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        if(Orientation==1){
+            Y = Y+distance;
+        }
+        if(Orientation==2){
+            X = X+distance;
+        }
+        if(Orientation==3){
+            Y=Y-distance;
+        }
+        if(Orientation==4){
+            X=X-distance;
+        }
+
+
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
 
     }
 
@@ -111,7 +134,7 @@ public class AutonomieTensorFlow extends LinearOpMode {
          rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
          leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
          rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        double rotationsNeeded = distance/Circumference;
+        double rotationsNeeded = (tilesize*distance)/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
@@ -126,6 +149,22 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+         if(Orientation==1){
+             Y = Y-distance;
+         }
+         if(Orientation==2){
+             X = X-distance;
+         }
+         if(Orientation==3){
+             Y=Y+distance;
+         }
+         if(Orientation==4){
+             X=X+distance;
+         }
+
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+         telemetry.update();
 
     }
 
@@ -135,7 +174,7 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        double rotationsNeeded = distance/Circumference;
+        double rotationsNeeded = (distance*tilesize)/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
@@ -150,7 +189,22 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        if(Orientation==1){
+            X = X-distance;
+        }
+        if(Orientation==2){
+            Y = Y+distance;
+        }
+        if(Orientation==3){
+            X=X+distance;
+        }
+        if(Orientation==4){
+            Y=Y-distance;
+        }
 
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
     }
 
     public void moveRight(double power,double distance) {
@@ -159,7 +213,7 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        double rotationsNeeded = distance/Circumference;
+        double rotationsNeeded = (distance*tilesize)/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
@@ -175,6 +229,21 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
+        if(Orientation==1){
+            X = X+distance;
+        }
+        if(Orientation==2){
+            Y = Y-distance;
+        }
+        if(Orientation==3){
+            X=X-distance;
+        }
+        if(Orientation==4){
+            Y=Y+ distance;
+        }
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
     }
 
     public void turnLeft(double power,double distance) {
@@ -183,7 +252,7 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        double rotationsNeeded = distance/Circumference;
+        double rotationsNeeded = (distance*tilesize)/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
@@ -198,6 +267,22 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
+        if(Orientation==1){
+            Orientation=4;
+        }
+        if(Orientation==2){
+            Orientation=1;
+        }
+        if(Orientation==3){
+            Orientation=2;
+        }
+        if(Orientation==4){
+            Orientation=3;
+        }
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
 
     }
 
@@ -207,7 +292,7 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        double rotationsNeeded = distance/Circumference;
+        double rotationsNeeded = (distance*tilesize)/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
@@ -222,7 +307,22 @@ public class AutonomieTensorFlow extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        if(Orientation==1){
+            Orientation=2;
+        }
+        if(Orientation==2){
+            Orientation=3;
+        }
+        if(Orientation==3){
+            Orientation=4;
+        }
+        if(Orientation==4){
+            Orientation=1;
+        }
 
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
     }
 
     public void grabStone() {
@@ -257,10 +357,12 @@ public class AutonomieTensorFlow extends LinearOpMode {
     }
 
     public void stoneGrabing(){
-        moveForward(0.5,22.75);
+        moveForward(0.5,1);
         grabStone();
-        moveBackward(0.5,22.75);
+        moveBackward(0.5,0.5);
+        grabbed=true;
     }
+
 
 
 
@@ -276,6 +378,33 @@ public class AutonomieTensorFlow extends LinearOpMode {
 
 
     private TFObjectDetector tfod;
+
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.4;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+
+
+    }
+
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
 
     @Override
     public void runOpMode() {
@@ -314,9 +443,11 @@ public class AutonomieTensorFlow extends LinearOpMode {
         if (opModeIsActive()) {
             while (opModeIsActive()) {
 
-                moveForward(0.5,22.75);
+                Orientation=1;
+                moveForward(0.5,0.2);
 
                 if (tfod != null) {
+
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> recognitions = tfod.getUpdatedRecognitions();
@@ -328,7 +459,6 @@ public class AutonomieTensorFlow extends LinearOpMode {
                                double ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
                                Found = true;
 
-
                                if(ObjectAngle == 0){
 
                                      SkyStonePosition=2;
@@ -337,20 +467,22 @@ public class AutonomieTensorFlow extends LinearOpMode {
                                if(ObjectAngle<=0){
 
                                    SkyStonePosition=1;
-                                   moveLeft(0.3,8);
+                                   moveLeft(0.3,0.25);
                                    stoneGrabing();
 
                                }
                                if(ObjectAngle>=0){
 
                                    SkyStonePosition=3;
-                                   moveRight(0.3,8);
+                                   moveRight(0.3,0.25);
                                    stoneGrabing();
 
                                }
 
 
                            }
+
+
                       }
 
 
@@ -360,16 +492,16 @@ public class AutonomieTensorFlow extends LinearOpMode {
 
                 }
 
-                   moveRight(0.6,8*SkyStonePosition+47);
+                   moveRight(0.6,SkyStoneSize*SkyStonePosition+2);
                    releaseStone();
-                   moveLeft(0.6,60+SkyStonePosition*8);
+                   moveLeft(0.6,3+SkyStonePosition*SkyStoneSize);
                    stoneGrabing();
-                   moveRight(0.6,60+SkyStonePosition*8);
+                   moveRight(0.6,3+SkyStonePosition*SkyStoneSize);
                    releaseStone();
-                   moveLeft(0.3,10);
+                   moveLeft(0.3,0.7);
 
 
-                   if(Found == true)
+                   if(Found)
                        break;
 
             }
@@ -380,37 +512,11 @@ public class AutonomieTensorFlow extends LinearOpMode {
         }
     }
 
-    /**
-     * Initialize the Vuforia localization engine.
-     */
-    private void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-    }
-
-    /**
-     * Initialize the TensorFlow Object Detection engine.
-     */
-    private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minimumConfidence = 0.4;
-       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 
 
-    }
+
+
+
 
 
 

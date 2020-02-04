@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="NEW MECANUM TELE", group="Linear Opmode")
-//@Disabled
+
 public class AiCitizensONLYMecanumTele extends LinearOpMode {
 
     // Declare OpMode members.
@@ -98,10 +98,6 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Initialize tray servos
         trayServo1 = hardwareMap.get(Servo.class, "trayservo1");
@@ -157,9 +153,17 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
             if (openTray){
                 trayServo1.setPosition(0.5);
                 trayServo2.setPosition(0.5);
+                leftFrontMotor.setPower(-0.3);
+                rightFrontMotor.setPower(-0.3);
+                leftRearMotor.setPower(-0.3);
+                rightRearMotor.setPower(-0.3);
             }
 
             if (closeTray){
+                leftFrontMotor.setPower(0);
+                rightFrontMotor.setPower(0);
+                leftRearMotor.setPower(0);
+                rightRearMotor.setPower(0);
                 trayServo1.setPosition(0.1);
                 trayServo2.setPosition(0.1);
             }
