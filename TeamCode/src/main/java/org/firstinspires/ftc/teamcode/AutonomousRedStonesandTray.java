@@ -6,12 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousForRedSideWithStonesAndTray", group="Autonomous")
+@Autonomous(name="AutonomousRedStonesandTray", group="Autonomous")
 
-public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
+public  class AutonomousRedStonesandTray extends LinearOpMode {
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -24,8 +23,7 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
     private Servo lowarmUp = null;
     private Servo lowarmDown = null;
 
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
+
 
     public void moveForward(long time, double power) {
 
@@ -39,7 +37,7 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
 
     public void moveBackward(long time, double power) {
 
-        power -= power;
+        power = -power;
 
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(power);
@@ -51,8 +49,8 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
 
     public void moveLeft(long time, double power) {
 
-        leftFrontMotor.setPower(power);
-        rightFrontMotor.setPower(-power);
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
 
@@ -61,8 +59,8 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
 
     public void moveRight(long time, double power) {
 
-        leftFrontMotor.setPower(-power);
-        rightFrontMotor.setPower(power);
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
 
@@ -73,8 +71,8 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
 
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
-        leftRearMotor.setPower(power);
-        rightRearMotor.setPower(-power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(power);
 
         sleep(time);
     }
@@ -83,39 +81,46 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
 
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
-        leftRearMotor.setPower(-power);
-        rightRearMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(-power);
 
         sleep(time);
     }
 
     public void grabStone() {
 
-        moveForward(150, 1);
-        lowarmUp.setPosition(0.25);
-        lowarmDown.setPosition(-1);
-        moveBackward(300,1);
+        lowarmUp.setPosition(-1);
+        lowarmDown.setPosition(0.25);
 
+
+
+
+    }
+
+    public void releaseStone(){
+
+        lowarmUp.setPosition(1);
+        lowarmDown.setPosition(-0.5);
     }
 
     public void grabtray(){
 
-        trayservo1.setPosition(1);
-        trayservo2.setPosition(1);
+        trayservo1.setPosition(0.1);
+        trayservo2.setPosition(0.1);
 
     }
 
     public void opentray(){
 
-        trayservo1.setPosition(0);
-        trayservo2.setPosition(0);
+        trayservo1.setPosition(1);
+        trayservo2.setPosition(1);
     }
 
     @Override
-    public void runOpMode() throws InterruptedException  {
+    public void runOpMode() throws InterruptedException {
 
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
-        rightFrontMotor = hardwareMap.dcMotor.get("rigthFront");
+        rightFrontMotor = hardwareMap.dcMotor.get("rightFront");
         leftRearMotor = hardwareMap.dcMotor.get("leftRear");
         rightRearMotor = hardwareMap.dcMotor.get("rightRear");
 
@@ -135,112 +140,76 @@ public class AutonomousForBlueSideWithStonesAndTray extends LinearOpMode {
         leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
-        trayservo1.setPosition(0);
-        trayservo2.setPosition(0);
+        trayservo1.setDirection(Servo.Direction.FORWARD);
+        trayservo2.setDirection(Servo.Direction.REVERSE);
 
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
+        lowarmUp.setPosition(1);
+        lowarmDown.setPosition(-0.5);
+        trayservo1.setPosition(0.5);
+        trayservo2.setPosition(0.5);
 
-        final double SCALE_FACTOR = 255;
-        float hsvValues[] = {0F, 0F, 0F};
-        final float values[] = hsvValues;
 
         waitForStart();
 
-        while (opModeIsActive()) {
+        int CurrentPosition=1;
+        int StoneTime = 50;
 
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
+        while(CurrentPosition<=2){
 
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-
-            // Declared a normalization that, if black is under 2, if yellow is over 2
-            int detectionSkyStone = (sensorColor.red() * sensorColor.green()) / (sensorColor.blue() * sensorColor.blue());
-            int currentStonePos;
-
-            long timeToMoveLeft = 3000;
-            long timeAddedSecondSS = 400;
-
-            moveForward(500, 1);
-
-            if (detectionSkyStone <= 2) {
-                // first stone
-
-                grabStone();
-
-                currentStonePos = 1;
-
-            } else {
-
-                moveRight(150, 1);
-
-                if (detectionSkyStone <= 2) {
-                    // second stone
-
-                    grabStone();
-
-                    currentStonePos = 2;
-
-                } else {
-                    // third stone
-
-                    moveRight(150, 1);
-
-                    grabStone();
-
-                    currentStonePos = 3;
-
-                }
-
-            }
-
-            // calculate the time to move left based on which stone was grabbed
-            timeToMoveLeft += 200 * currentStonePos;
-
-            moveLeft(timeToMoveLeft,1);
-
-            lowarmUp.setPosition(-0.5);
-            lowarmDown.setPosition(1);
-
-            // calculate the time to come back and grab the second skystone based on time right
-            moveRight(timeToMoveLeft + 400, 1);
+            moveForward(610,1);
+            moveForward(300,0);
             grabStone();
+            moveForward(800,0);
 
-            // update the time to move left
-            timeToMoveLeft += timeAddedSecondSS;
+            moveBackward(610,1);
 
-            moveLeft(timeToMoveLeft,1);
+            moveRight(1750+CurrentPosition*StoneTime,1);
 
-            lowarmUp.setPosition(-0.5);
-            lowarmDown.setPosition(1);
+            releaseStone();
+            turnRight(115,0.7);
+            moveForward(800,0);
+            if(CurrentPosition == 2)
+                break;
+            moveLeft(1900+CurrentPosition*StoneTime,1);
+            CurrentPosition=CurrentPosition+1;
 
-            //start moving tray
-
-            moveForward(700,1);
-            grabtray();
-            turnLeft(600,1);
-            moveForward(500,1);
-            opentray();
-            moveBackward(1000,1);
-
-
+            moveForward(200, 1);
 
 
         }
 
+        moveRight(500,1);
+        moveForward(1410,0.5);
+        moveForward(300,0.1);
+        moveForward(650,0);
+        grabtray();
+        moveForward(500,0);
+        turnRight(500,0.5);
+        moveForward(800,0);
+        moveBackward(1320,0.7);
+        turnRight(1600,1);
+        moveForward(800,1);
+        moveForward(400,0);
+
+        opentray();
+        moveForward(350,0);
+        moveBackward(1000,0.5);
+        moveRight(500,1);
+
+
+
+
+
+
+
+
+
+
+
     }
 
+
 }
-
-
 
 
 

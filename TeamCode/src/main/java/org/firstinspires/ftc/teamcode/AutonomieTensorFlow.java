@@ -27,22 +27,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import java.util.List;
 
 /**
  * This 2019-2020 OpMode illustrates the basics of using the TensorFlow Object Detection API to
@@ -54,18 +53,17 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
+@Autonomous(name = "AutonomieTensorFlow", group = "Autonomous")
 
 
-
-
-public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
+public class AutonomieTensorFlow extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
-    double TargetHeightRatio = 0.8;
     int Motor_Tick_Counts = 1120;
     double Circumference = 3.1415*3.93701;
+    int SkyStonePosition;
+    boolean Found = false;
 
 
     private DcMotor leftFrontMotor = null;
@@ -83,8 +81,12 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
 
 
-    public void moveForward(double power,int distance) {
+    public void moveForward(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double rotationsNeeded = distance/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
@@ -103,56 +105,124 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
     }
 
-    public void moveBackward(long time, double power) {
+     public void moveBackward(double power,double distance) {
 
-        power = -power;
+         leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(-power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(-power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFrontMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-        leftRearMotor.setPower(power);
-        rightRearMotor.setPower(power);
 
-        sleep(time);
     }
 
-    public void moveLeft(long time, double power) {
+    public void moveLeft(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
-    public void moveRight(long time, double power) {
+    public void moveRight(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
-    public void turnLeft(long time, double power) {
+    public void turnLeft(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
-    public void turnRight(long time, double power) {
+    public void turnRight(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
     public void grabStone() {
@@ -186,13 +256,19 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         trayservo2.setPosition(1);
     }
 
+    public void stoneGrabing(){
+        moveForward(0.5,22.75);
+        grabStone();
+        moveBackward(0.5,22.75);
+    }
+
 
 
 
 
 
     private static final String VUFORIA_KEY =
-            " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+            " AWh3WbD/////AAABmQr66RjvbkVtr+RI6oomXqIgCzVDQtdjwkNT4jkW0JBVLrq3rymbi6vq3sBtaFBrD4rYqleNmM9WFwZWYYNka48h4t85scS+/g7cTt0g84GiuI3J8uqDqL4IKpVlu+JLSEW9J0KkuoQSksN0RIxVCqC87a2MKMF9IRUuSz35PYN59JSwljttQORgO4MJGb5O8nwDbEM0cOPyKO8NpNftDnGr0MeBFJPVv2BBN2KfGdUO9/EyEPrHLfj7tchxBDkXE2Bk5muqA8MY+9cw5HoSw7aHSPd2beotDziYc9YtvbrmpdNc3HlMA0i/wAFAuh39k7che12HYEi5VdEmJ4ZG/yaTDuIsMNqz/wMZMSpjfJGd ";
 
 
     private VuforiaLocalizer vuforia;
@@ -224,50 +300,59 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
-        /**
-         * Activate TensorFlow Object Detection before we wait for the start command.
-         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
-         **/
+
+
         if (tfod != null) {
             tfod.activate();
         }
 
-        /** Wait for the game to begin */
+
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
+
+                moveForward(0.5,22.75);
+
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> recognitions = tfod.getUpdatedRecognitions();
                     if (recognitions != null) {
                       telemetry.addData("# Object Detected", recognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                      int i = 0;
+
                       for (Recognition recognition : recognitions) {
                            if(recognition.getLabel() == LABEL_SECOND_ELEMENT){
                                double ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+                               Found = true;
+
+
                                if(ObjectAngle == 0){
 
+                                     SkyStonePosition=2;
+                                     stoneGrabing();
                                }
-                               else
-                               {
-                                   while(ObjectAngle>0){
+                               if(ObjectAngle<=0){
 
-                                   }
+                                   SkyStonePosition=1;
+                                   moveLeft(0.3,8);
+                                   stoneGrabing();
 
-                                   while(ObjectAngle<0){
+                               }
+                               if(ObjectAngle>=0){
 
-                                   }
+                                   SkyStonePosition=3;
+                                   moveRight(0.3,8);
+                                   stoneGrabing();
+
                                }
 
 
                            }
                       }
-                      telemetry.update();
+
 
                     }
 
@@ -275,6 +360,17 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
                 }
 
+                   moveRight(0.6,8*SkyStonePosition+47);
+                   releaseStone();
+                   moveLeft(0.6,60+SkyStonePosition*8);
+                   stoneGrabing();
+                   moveRight(0.6,60+SkyStonePosition*8);
+                   releaseStone();
+                   moveLeft(0.3,10);
+
+
+                   if(Found == true)
+                       break;
 
             }
         }
@@ -309,7 +405,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minimumConfidence = 0.8;
+       tfodParameters.minimumConfidence = 0.4;
        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 

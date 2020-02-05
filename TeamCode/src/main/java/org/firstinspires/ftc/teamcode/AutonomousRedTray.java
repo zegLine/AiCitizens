@@ -5,9 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousRedStonesandTray", group="Autonomous")
+@Autonomous(name="AutonomousRedTray", group="Autonomous")
 
 public  class AutonomousRedTray extends LinearOpMode {
+
+    int Motor_Tick_Counts = 1120;
+    double Circumference = 3.1415*3.93701;
+    int SkyStonePosition;
+
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -22,82 +27,168 @@ public  class AutonomousRedTray extends LinearOpMode {
 
 
 
-    public void moveForward(long time, double power) {
 
+
+    public void moveForward(double power,double distance) {
+
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
-    public void moveBackward(long time, double power) {
+    public void moveBackward(double power,double distance) {
 
-        power = -power;
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(-power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(-power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFrontMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-        leftRearMotor.setPower(power);
-        rightRearMotor.setPower(power);
 
-        sleep(time);
     }
 
-    public void moveLeft(long time, double power) {
+    public void moveLeft(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
-    public void moveRight(long time, double power) {
+    public void moveRight(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
-    public void turnLeft(long time, double power) {
+    public void turnLeft(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
-    public void turnRight(long time, double power) {
+    public void turnRight(double power,double distance) {
 
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = distance/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        sleep(time);
+
     }
 
     public void grabStone() {
 
-        lowarmUp.setPosition(0.7);
-        lowarmDown.setPosition(-1);
-        sleep(300);
 
-        lowarmDown.setPosition(-0.7);
+
+
+        lowarmUp.setPosition(-0.5);
+        lowarmDown.setPosition(1);
+
 
     }
 
     public void releaseStone(){
 
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
+        lowarmUp.setPosition(0.7);
+        lowarmDown.setPosition(-1);
+
     }
 
     public void grabtray(){
@@ -112,6 +203,16 @@ public  class AutonomousRedTray extends LinearOpMode {
         trayservo1.setPosition(1);
         trayservo2.setPosition(1);
     }
+
+    public void stoneGrabing(){
+        moveForward(0.5,22.75);
+        grabStone();
+        moveBackward(0.5,22.75);
+    }
+
+
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -140,32 +241,24 @@ public  class AutonomousRedTray extends LinearOpMode {
         trayservo1.setDirection(Servo.Direction.FORWARD);
         trayservo2.setDirection(Servo.Direction.REVERSE);
 
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
+        lowarmUp.setPosition(1);
+        lowarmDown.setPosition(-0.5);
         trayservo1.setPosition(0.5);
         trayservo2.setPosition(0.5);
 
 
         waitForStart();
 
-
-
-        moveRight(700,1);
-        moveForward(1410,0.5);
-        moveForward(300,0.1);
-        moveForward(650,0);
+        moveForward(0.5,47);
+        moveRight(0.3,11.25);
         grabtray();
-        moveForward(500,0);
-        moveForward(800,0);
-        moveBackward(1320,1);
-        turnRight(1500,1);
-        moveForward(800,1);
-        moveForward(400,0);
-
+        moveBackward(0.3,22.75);
+        turnRight(0.3,10);
         opentray();
-        moveForward(350,0);
-        moveBackward(1200,1);
-        moveRight(500,1);
+        moveBackward(0.5,45);
+
+
+
 
 
 

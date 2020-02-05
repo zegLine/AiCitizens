@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="NEW MECANUM TELE", group="Linear Opmode")
-//@Disabled
+
 public class AiCitizensONLYMecanumTele extends LinearOpMode {
 
     // Declare OpMode members.
@@ -70,7 +70,7 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
     private double RF, LF, RR, LR;
     private double X1, Y1, X2, Y2;
 
-    private double joyScale = 0.5;
+    private double joyScale = 0.7;
 
     private double precisionMin = 0.7;
     private double precisionMax = 1.0;
@@ -98,26 +98,26 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Initialize tray servos
-        trayServo1 = hardwareMap.get(Servo.class, "tray_servo_1");
-        trayServo2 = hardwareMap.get(Servo.class, "tray_servo_2");
+        trayServo1 = hardwareMap.get(Servo.class, "trayservo1");
+        trayServo2 = hardwareMap.get(Servo.class, "trayservo2");
 
         trayServo1.setDirection(Servo.Direction.FORWARD);
         trayServo2.setDirection(Servo.Direction.REVERSE);
 
         // Initialize the low (bottom) arm
-        lowArmBottomServo = hardwareMap.get(Servo.class, "low_arm_bottom_servo");
-        lowArmHighServo = hardwareMap.get(Servo.class, "low_arm_high_servo");
+        lowArmBottomServo = hardwareMap.get(Servo.class, "lowarmdown");
+        lowArmHighServo = hardwareMap.get(Servo.class, "lowarmup");
 
         lowArmBottomServo.setDirection(Servo.Direction.REVERSE);
         lowArmHighServo.setDirection(Servo.Direction.FORWARD);
 
-    }
+
+
+        }
+
+
 
     @Override
     public void runOpMode() {
@@ -130,6 +130,8 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+
 
 
         // run until the end of the match (driver presses STOP)
@@ -151,11 +153,19 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
             if (openTray){
                 trayServo1.setPosition(0.5);
                 trayServo2.setPosition(0.5);
+                leftFrontMotor.setPower(-0.3);
+                rightFrontMotor.setPower(-0.3);
+                leftRearMotor.setPower(-0.3);
+                rightRearMotor.setPower(-0.3);
             }
 
             if (closeTray){
-                trayServo1.setPosition(0);
-                trayServo2.setPosition(0);
+                leftFrontMotor.setPower(0);
+                rightFrontMotor.setPower(0);
+                leftRearMotor.setPower(0);
+                rightRearMotor.setPower(0);
+                trayServo1.setPosition(0.1);
+                trayServo2.setPosition(0.1);
             }
 
             // Calculate LOW ARM positions
@@ -168,6 +178,14 @@ public class AiCitizensONLYMecanumTele extends LinearOpMode {
                 lowArmBottomServo.setPosition(-0.5);
                 lowArmHighServo.setPosition(1);
             }
+
+            if(gamepad2.x){
+                lowArmBottomServo.setPosition(-1);
+                lowArmHighServo.setPosition(1);
+
+            }
+
+
 
             // Joystick values
             Y1 = -gamepad1.left_stick_y * joyScale;

@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="AutonomousRedStones", group="Autonomous")
+@Autonomous(name="AutonomousBlueParkNearMiddle", group="Autonomous")
 
-public  class AutonomousRedStones extends LinearOpMode {
+public  class AutonomousBlueParkNearMiddle extends LinearOpMode {
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -89,20 +86,18 @@ public  class AutonomousRedStones extends LinearOpMode {
 
     public void grabStone() {
 
+        lowarmUp.setPosition(0.7);
+        lowarmDown.setPosition(-1);
+        sleep(300);
 
-
-
-        lowarmUp.setPosition(-0.5);
-        lowarmDown.setPosition(1);
-
+        lowarmDown.setPosition(-0.7);
 
     }
 
     public void releaseStone(){
 
-        lowarmUp.setPosition(0.7);
-        lowarmDown.setPosition(-1);
-
+        lowarmUp.setPosition(-0.5);
+        lowarmDown.setPosition(1);
     }
 
     public void grabtray(){
@@ -137,8 +132,6 @@ public  class AutonomousRedStones extends LinearOpMode {
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
 
-
-
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -147,43 +140,19 @@ public  class AutonomousRedStones extends LinearOpMode {
         trayservo1.setDirection(Servo.Direction.FORWARD);
         trayservo2.setDirection(Servo.Direction.REVERSE);
 
-        lowarmUp.setPosition(0.7);
-        lowarmDown.setPosition(-1);
+        lowarmUp.setPosition(-0.5);
+        lowarmDown.setPosition(1);
         trayservo1.setPosition(0.5);
         trayservo2.setPosition(0.5);
 
 
-
         waitForStart();
 
-        int CurrentPosition=1;
-        int StoneTime = 50;
 
-        while(CurrentPosition<=1){
+        sleep(1700);
+        moveForward(300,0.5);
+        moveRight(300,0.5);
 
-            moveForward(520,1);
-            moveForward(300,0);
-            grabStone();
-            moveForward(800,0);
-
-            moveBackward(600,0.6);
-
-            moveRight(1300+CurrentPosition*StoneTime,1);
-            turnRight(100,0.3);
-            releaseStone();
-            moveForward(800,0);
-            if(CurrentPosition == 1)
-                break;
-            moveLeft(1400+CurrentPosition*StoneTime,1);
-            CurrentPosition=CurrentPosition+1;
-
-            moveForward(200, 1);
-
-
-        }
-
-             moveLeft(400,0.6);
-        moveForward(300,0.6);
 
 
 
