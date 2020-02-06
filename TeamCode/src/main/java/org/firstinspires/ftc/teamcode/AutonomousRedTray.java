@@ -35,16 +35,20 @@ public  class AutonomousRedTray extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         double rotationsNeeded = distance/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
         rightFrontMotor.setTargetPosition(encoderDrivingTarget);
         rightRearMotor.setTargetPosition(encoderDrivingTarget);
+
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(power);
+
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -59,16 +63,20 @@ public  class AutonomousRedTray extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         double rotationsNeeded = distance/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
         rightFrontMotor.setTargetPosition(encoderDrivingTarget);
         rightRearMotor.setTargetPosition(encoderDrivingTarget);
+
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(-power);
+
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -83,16 +91,20 @@ public  class AutonomousRedTray extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         double rotationsNeeded = distance/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
         rightFrontMotor.setTargetPosition(encoderDrivingTarget);
         rightRearMotor.setTargetPosition(encoderDrivingTarget);
+
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
+
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -107,16 +119,20 @@ public  class AutonomousRedTray extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         double rotationsNeeded = distance/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
         rightFrontMotor.setTargetPosition(encoderDrivingTarget);
         rightRearMotor.setTargetPosition(encoderDrivingTarget);
+
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
+
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -131,16 +147,20 @@ public  class AutonomousRedTray extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         double rotationsNeeded = distance/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
         rightFrontMotor.setTargetPosition(encoderDrivingTarget);
         rightRearMotor.setTargetPosition(encoderDrivingTarget);
+
         leftFrontMotor.setPower(-power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
+
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -155,16 +175,20 @@ public  class AutonomousRedTray extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         double rotationsNeeded = distance/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
         rightFrontMotor.setTargetPosition(encoderDrivingTarget);
         rightRearMotor.setTargetPosition(encoderDrivingTarget);
+
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
+
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
