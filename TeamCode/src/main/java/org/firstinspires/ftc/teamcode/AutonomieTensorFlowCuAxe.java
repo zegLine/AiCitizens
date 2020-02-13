@@ -361,6 +361,158 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
         telemetry.update();
     }
 
+    public void movediagonalforwardright(double power,double distance){
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = (distance*tilesize)/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(0);
+        rightRearMotor.setPower(power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if(Orientation==1){
+            X=X+distance;
+            Y=Y+distance;
+        }
+        if(Orientation==2){
+            X=X+distance;
+            Y=Y-distance;
+        }
+        if(Orientation==3){
+            X=X-distance;
+            Y=Y-distance;
+        }
+        if(Orientation==4){
+            X=X-distance;
+            Y=Y+distance;
+        }
+
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
+    }
+    public void movediagonalbacwardright(double power,double distance){
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = (distance*tilesize)/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(0);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(0);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if(Orientation==1){
+            X=X+distance;
+            Y=Y-distance;
+        }
+        if(Orientation==2){
+            X=X-distance;
+            Y=Y-distance;
+        }
+        if(Orientation==3){
+            X=X-distance;
+            Y=Y+distance;
+        }
+        if(Orientation==4){
+            X=X+distance;
+            Y=Y+distance;
+        }
+
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
+    }
+
+    public void movediagonalforwardleft(double power,double distance){
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double rotationsNeeded = (distance*tilesize)/Circumference;
+        int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+        leftFrontMotor.setTargetPosition(encoderDrivingTarget);
+        leftRearMotor.setTargetPosition(encoderDrivingTarget);
+        rightFrontMotor.setTargetPosition(encoderDrivingTarget);
+        rightRearMotor.setTargetPosition(encoderDrivingTarget);
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(0);
+        rightRearMotor.setPower(power);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if(Orientation==1){
+            X=X+distance;
+            Y=Y+distance;
+        }
+        if(Orientation==2){
+            X=X+distance;
+            Y=Y-distance;
+        }
+        if(Orientation==3){
+            X=X-distance;
+            Y=Y-distance;
+        }
+        if(Orientation==4){
+            X=X-distance;
+            Y=Y+distance;
+        }
+
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
+    }
+
+
+
+    public void movement(double XN,double YN,double power){
+
+        double difx;
+        double dify;
+        difx=XN-X;
+        dify=YN-Y;
+        if(Orientation == 1){
+            moveForward(power,dify);
+            moveRight(power,difx);
+        }
+        if(Orientation == 2){
+            moveForward(power,difx);
+            moveRight(power,dify);
+
+
+        }
+
+        X=XN;
+        Y=YN;
+        telemetry.addData("X=",X);
+        telemetry.addData("Y=",Y);
+        telemetry.update();
+    }
+
+
     public void grabStone() {
 
 
