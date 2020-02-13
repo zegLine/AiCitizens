@@ -91,6 +91,8 @@ public class AiCitizensMecanumTele extends LinearOpMode {
     private DcMotor buildArmBaseMotor = null;
     private Servo buildArmBaseServo = null;
 
+    private double baseServoPosition = 0;
+
     private DcMotor buildArmHighMotor = null;
     private Servo buildArmHighServo = null;
 
@@ -208,6 +210,7 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             }
 
             // BUILD ARM
+            // Arm motors
 
             double babmVal = -gamepad2.right_stick_y;
             double babmPower = Range.clip(babmVal, -0.5, 0.5);;
@@ -219,6 +222,11 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             buildArmBaseMotor.setPower(babmPower);
             buildArmHighMotor.setPower(bahmPower);
 
+            // Arm servos
+
+            baseServoPosition = Range.clip(baseServoPosition + babmPower, 0, 1);
+            buildArmBaseServo.setPosition(baseServoPosition);
+
             if (gamepad2.x) {
                 // CLOSE HIGH ARM
                 buildArmHighServo.setPosition(0);
@@ -226,6 +234,8 @@ public class AiCitizensMecanumTele extends LinearOpMode {
                 // OPEN HIGH ARM
                 buildArmHighServo.setPosition(0.8);
             }
+
+
 
             // Joystick values
             Y1 = -gamepad1.left_stick_y * joyScale;
