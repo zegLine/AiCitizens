@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -85,6 +86,17 @@ public class AiCitizensMecanumTele extends LinearOpMode {
     private Servo lowArmBottomServo = null;
     private Servo lowArmHighServo = null;
 
+    // BUILD ARM ----------------
+
+    private DcMotor buildArmBaseMotor = null;
+    private Servo buildArmBaseServo = null;
+
+    private double baseServoPosition = 0;
+
+    private DcMotor buildArmHighMotor = null;
+    private Servo buildArmHighServo = null;
+
+
 
     public void initializeAll() {
         // Initialize motors
@@ -113,9 +125,21 @@ public class AiCitizensMecanumTele extends LinearOpMode {
         lowArmBottomServo.setDirection(Servo.Direction.REVERSE);
         lowArmHighServo.setDirection(Servo.Direction.FORWARD);
 
+        // Initialize the BUILD ARM ----------
 
+        buildArmBaseMotor = hardwareMap.dcMotor.get("buildArmBaseMotor");
+        buildArmBaseServo = hardwareMap.get(Servo.class, "buildArmBaseServo");
 
-        }
+        buildArmHighMotor = hardwareMap.dcMotor.get("buildArmHighMotor");
+        buildArmHighServo = hardwareMap.get(Servo.class, "buildArmHighServo");
+
+        buildArmBaseMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        buildArmBaseServo.setDirection(Servo.Direction.FORWARD);
+
+        buildArmHighMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        buildArmHighServo.setDirection(Servo.Direction.FORWARD);
+
+    }
 
 
 
@@ -183,6 +207,32 @@ public class AiCitizensMecanumTele extends LinearOpMode {
                 lowArmBottomServo.setPosition(-1);
                 lowArmHighServo.setPosition(1);
 
+            }
+
+            // BUILD ARM
+            // Arm motors
+
+            double babmVal = -gamepad2.right_stick_y;
+            double babmPower = Range.clip(babmVal, -0.5, 0.5);;
+            if (babmPower == 0) babmPower = 0.1;
+
+            double bahmVal = -gamepad2.left_stick_y;
+            double bahmPower = Range.clip(bahmVal, -0.5, 0.5);
+
+            buildArmBaseMotor.setPower(babmPower);
+            buildArmHighMotor.setPower(bahmPower);
+
+            // Arm servos
+
+            baseServoPosition = Range.clip(baseServoPosition + babmPower, 0, 1);
+            buildArmBaseServo.setPosition(baseServoPosition);
+
+            if (gamepad2.x) {
+                // CLOSE HIGH ARM
+                buildArmHighServo.setPosition(0);
+            } else if (gamepad2.b) {
+                // OPEN HIGH ARM
+                buildArmHighServo.setPosition(0.8);
             }
 
 

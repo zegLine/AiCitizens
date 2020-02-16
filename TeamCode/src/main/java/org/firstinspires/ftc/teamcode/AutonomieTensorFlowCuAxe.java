@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -93,20 +94,36 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         double rotationsNeeded = (distance*tilesize)/Circumference;
         int encoderDrivingTarget=(int)(rotationsNeeded*1120);
+
         leftFrontMotor.setTargetPosition(encoderDrivingTarget);
         leftRearMotor.setTargetPosition(encoderDrivingTarget);
         rightFrontMotor.setTargetPosition(encoderDrivingTarget);
         rightRearMotor.setTargetPosition(encoderDrivingTarget);
+
         leftFrontMotor.setPower(power);
         rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(power);
+
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (leftFrontMotor.isBusy()){}
+
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        rightRearMotor.setPower(0);
+
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         if(Orientation==1){
             Y = Y+distance;
@@ -148,6 +165,12 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         while (leftFrontMotor.isBusy()){}
+
+         leftFrontMotor.setPower(0);
+         rightFrontMotor.setPower(0);
+         leftRearMotor.setPower(0);
+         rightRearMotor.setPower(0);
 
          if(Orientation==1){
              Y = Y-distance;
@@ -188,6 +211,12 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (leftFrontMotor.isBusy()){}
+
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        rightRearMotor.setPower(0);
 
         if(Orientation==1){
             X = X-distance;
@@ -227,6 +256,13 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (leftFrontMotor.isBusy()){}
+
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        rightRearMotor.setPower(0);
 
 
         if(Orientation==1){
@@ -509,7 +545,7 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
     }
 
     public void stoneGrabing(){
-        moveForward(0.5,1);
+        moveForward(0.3,1);
         grabStone();
         moveBackward(0.5,0.5);
         grabbed=true;
@@ -535,7 +571,7 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.4;
+        tfodParameters.minimumConfidence = 0.50;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 
@@ -566,11 +602,29 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
         leftRearMotor= hardwareMap.dcMotor.get("leftRear");
         rightRearMotor= hardwareMap.dcMotor.get("rightRear");
 
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRearMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRearMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRearMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRearMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        lowarmUp = hardwareMap.servo.get("lowarmup");
+        lowarmDown = hardwareMap.servo.get("lowarmdown");
+
+        trayservo1 = hardwareMap.servo.get("trayservo1");
+        trayservo2 = hardwareMap.servo.get("trayservo2");
 
 
         initVuforia();
@@ -593,11 +647,10 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
 
                 Orientation=1;
-                moveForward(0.5,0.2);
-
+                moveForward(0.5,0.5);
+                /*
                 if (tfod != null) {
 
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -642,8 +695,10 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
 
 
 
-                }
+                }*/
 
+                SkyStonePosition=2;
+                stoneGrabing();
                    moveRight(0.6,SkyStoneSize*SkyStonePosition+2);
                    releaseStone();
                    moveLeft(0.6,3+SkyStonePosition*SkyStoneSize);
@@ -653,10 +708,8 @@ public class AutonomieTensorFlowCuAxe extends LinearOpMode {
                    moveLeft(0.3,0.7);
 
 
-                   if(Found)
-                       break;
 
-            }
+
         }
 
         if (tfod != null) {
