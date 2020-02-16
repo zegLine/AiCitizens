@@ -218,12 +218,15 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             /*
 
-
-
                 BUILD ARM
 
+                Crane motor is mapped to GAMEPAD2 RIGHT STICK Y
+                Crane servo is mapped to GAMEPAD2 LEFT AND RIGHT TRIGGER
 
+                Arm base motor is mapped to GAMEPAD2 LEFT STICK Y
+                Balance servo is mapped to GAMEPAD2 LEFT STICK X
 
+                Arm grab servo is mapped to GAMEPAD2 X and B buttons
 
             */
 
