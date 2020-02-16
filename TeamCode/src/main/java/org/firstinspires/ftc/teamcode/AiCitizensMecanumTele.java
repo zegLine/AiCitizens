@@ -96,6 +96,9 @@ public class AiCitizensMecanumTele extends LinearOpMode {
     private DcMotor buildArmHighMotor = null;
     private Servo buildArmHighServo = null;
 
+    private Servo buildArmBalanceServo = null;
+
+    private double balanceServoPosition = 0;
 
 
     public void initializeAll() {
@@ -133,11 +136,15 @@ public class AiCitizensMecanumTele extends LinearOpMode {
         buildArmHighMotor = hardwareMap.dcMotor.get("buildArmHighMotor");
         buildArmHighServo = hardwareMap.get(Servo.class, "buildArmHighServo");
 
+        buildArmBalanceServo = hardwareMap.get(Servo.class, "buildArmBalanceServo");
+
         buildArmBaseMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         buildArmBaseServo.setDirection(Servo.Direction.FORWARD);
 
         buildArmHighMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         buildArmHighServo.setDirection(Servo.Direction.FORWARD);
+
+        buildArmBalanceServo.setDirection(Servo.Direction.FORWARD);
 
     }
 
@@ -209,22 +216,42 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             }
 
-            // BUILD ARM
-            // Arm motors
+            /*
 
+
+
+                BUILD ARM
+
+
+
+
+            */
+
+            // Motors
             double babmVal = -gamepad2.right_stick_y;
-            double babmPower = Range.clip(babmVal, -0.5, 0.5);;
-            if (babmPower == 0) babmPower = 0.1;
+            double babmPower = Range.clip(babmVal, -1, 1);
+            if (gamepad2.right_stick_y == 0) babmPower = 0;
 
             double bahmVal = -gamepad2.left_stick_y;
-            double bahmPower = Range.clip(bahmVal, -0.5, 0.5);
+            double bahmPower = Range.clip(bahmVal, -0.35, 0.35);
+            if (bahmVal > 0.8 || bahmVal < -0.8) bahmPower = Range.clip(bahmVal, -1, 1);
+
+            if (bahmPower == 0) bahmPower = 0.01;
 
             buildArmBaseMotor.setPower(babmPower);
             buildArmHighMotor.setPower(bahmPower);
 
+
             // Arm servos
 
-            baseServoPosition = Range.clip(baseServoPosition + babmPower, 0, 1);
+            double craneServoUp = gamepad2.right_trigger;
+            double craneServoDown = gamepad2.left_trigger;
+            double babsPower = craneServoUp - craneServoDown;
+
+            baseServoPosition = Range.clip(baseServoPosition + babsPower, 0, 1);
+            if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
+                baseServoPosition = 0.52;
+            }
             buildArmBaseServo.setPosition(baseServoPosition);
 
             if (gamepad2.x) {
@@ -235,7 +262,20 @@ public class AiCitizensMecanumTele extends LinearOpMode {
                 buildArmHighServo.setPosition(0.8);
             }
 
+            // Balance Servo
+            balanceServoPosition = Range.clip(balanceServoPosition + gamepad2.left_stick_x, 0, 1);
+            buildArmBalanceServo.setPosition(balanceServoPosition);
 
+
+            /*
+
+
+
+                WHEELS MOVEMENT
+
+
+
+             */
 
             // Joystick values
             Y1 = -gamepad1.left_stick_y * joyScale;
@@ -264,7 +304,7 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
 
             // Show telemetry info
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            /*telemetry.addData("Status", "Run Time: " + runtime.toString());
 
             telemetry.addData("Precision", "%.3f", joyScale);
 
@@ -272,6 +312,11 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             telemetry.addData("RF", "%.3f", RF);
             telemetry.addData("LR", "%.3f", LR);
             telemetry.addData("RR", "%.3f", RR);
+            */
+            telemetry.addData("BASE MOTOR", "%.3f",babmPower);
+            telemetry.addData("HIGH MOTOR", "%.3f",bahmPower);
+            telemetry.addData("BASE SERVO", "%.3f",baseServoPosition);
+
 
             // telemetry.addData("Servos", "(%.2f)", servoPosition);
             // telemetry.addData("Servo read", "(%.2f)", readServoLeft);
