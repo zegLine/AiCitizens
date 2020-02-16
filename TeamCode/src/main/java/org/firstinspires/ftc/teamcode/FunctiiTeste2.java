@@ -82,21 +82,25 @@ public class FunctiiTeste2 extends LinearOpMode {
 
         waitForStart();
 
-        leftFrontMotor.setTargetPosition(5120);
-        leftRearMotor.setTargetPosition(5120);
-        rightFrontMotor.setTargetPosition(5120);
-        rightRearMotor.setTargetPosition(5120);
-
-        leftFrontMotor.setPower(1);
-        rightFrontMotor.setPower(1);
-        leftRearMotor.setPower(1);
-        rightRearMotor.setPower(1);
+        leftFrontMotor.setTargetPosition(1120);
+        leftRearMotor.setTargetPosition(1120);
+        rightFrontMotor.setTargetPosition(1120);
+        rightRearMotor.setTargetPosition(1120);
 
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        rightRearMotor.setPower(0);
+
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
