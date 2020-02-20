@@ -27,10 +27,10 @@ public class AutoEncoderTest2 extends LinearOpMode {
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFrontMotor.setTargetPosition(1680);
-        leftRearMotor.setTargetPosition(1680);
-        rightFrontMotor.setTargetPosition(1680);
-        rightRearMotor.setTargetPosition(1680);
+        leftFrontMotor.setTargetPosition(1120);
+        leftRearMotor.setTargetPosition(1120);
+        rightFrontMotor.setTargetPosition(1120);
+        rightRearMotor.setTargetPosition(1120);
 
         leftFrontMotor.setPower(1);
         leftRearMotor.setPower(1);
