@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -88,17 +89,15 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
     // BUILD ARM ----------------
 
-    private DcMotor buildArmBaseMotor = null;
-    private Servo buildArmBaseServo = null;
-
-    private double baseServoPosition = 0;
+    private DcMotor buildArmBaseMotor1 = null;
+    private DcMotor buildArmBaseMotor2 = null;
 
     private DcMotor buildArmHighMotor = null;
     private Servo buildArmHighServo = null;
 
-    private Servo buildArmBalanceServo = null;
+    private CRServo buildArmBalanceServo = null;
 
-    private double balanceServoPosition = 0;
+    private double balanceServoPosition = 0.5;
 
 
     public void initializeAll() {
@@ -130,21 +129,21 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
         // Initialize the BUILD ARM ----------
 
-        buildArmBaseMotor = hardwareMap.dcMotor.get("buildArmBaseMotor");
-        buildArmBaseServo = hardwareMap.get(Servo.class, "buildArmBaseServo");
+        buildArmBaseMotor1 = hardwareMap.dcMotor.get("buildArmBaseMotor1");
+        buildArmBaseMotor2 = hardwareMap.dcMotor.get("buildArmBaseMotor2");
 
         buildArmHighMotor = hardwareMap.dcMotor.get("buildArmHighMotor");
         buildArmHighServo = hardwareMap.get(Servo.class, "buildArmHighServo");
 
-        buildArmBalanceServo = hardwareMap.get(Servo.class, "buildArmBalanceServo");
+        buildArmBalanceServo = hardwareMap.get(CRServo.class, "buildArmBalanceServo");
 
-        buildArmBaseMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        buildArmBaseServo.setDirection(Servo.Direction.FORWARD);
+        buildArmBaseMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        buildArmBaseMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        buildArmHighMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        buildArmHighMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         buildArmHighServo.setDirection(Servo.Direction.FORWARD);
 
-        buildArmBalanceServo.setDirection(Servo.Direction.FORWARD);
+        buildArmBalanceServo.setDirection(CRServo.Direction.FORWARD);
 
     }
 
@@ -161,9 +160,6 @@ public class AiCitizensMecanumTele extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-
-
-
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -184,10 +180,6 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             if (openTray){
                 trayServo1.setPosition(0.5);
                 trayServo2.setPosition(0.5);
-                leftFrontMotor.setPower(-0.3);
-                rightFrontMotor.setPower(-0.3);
-                leftRearMotor.setPower(-0.3);
-                rightRearMotor.setPower(-0.3);
             }
 
             if (closeTray){
@@ -201,18 +193,17 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             // Calculate LOW ARM positions
             if (gamepad2.y){
-                lowArmBottomServo.setPosition(0.25);
-                lowArmHighServo.setPosition(-1);
+                lowArmBottomServo.setPosition(0.30);
+                lowArmHighServo.setPosition(0.1);
+                sleep(1000);
+                lowArmBottomServo.setPosition(0.15);
             }
 
             if (gamepad2.a){
+                lowArmBottomServo.setPosition(0.5);
+                lowArmHighServo.setPosition(1);
+                sleep(500);
                 lowArmBottomServo.setPosition(-0.5);
-                lowArmHighServo.setPosition(1);
-            }
-
-            if(gamepad2.x){
-                lowArmBottomServo.setPosition(-1);
-                lowArmHighServo.setPosition(1);
 
             }
 
@@ -220,8 +211,8 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
                 BUILD ARM
 
-                Crane motor is mapped to GAMEPAD2 RIGHT STICK Y
-                Crane servo is mapped to GAMEPAD2 LEFT AND RIGHT TRIGGER
+                Crane motor1 is mapped to GAMEPAD2 RIGHT STICK Y
+                Crane motor2 is mapped to GAMEPAD2 LEFT AND RIGHT TRIGGER
 
                 Arm base motor is mapped to GAMEPAD2 LEFT STICK Y
                 Balance servo is mapped to GAMEPAD2 LEFT STICK X
@@ -231,32 +222,30 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             */
 
             // Motors
+
+            // BABM1
             double babmVal = -gamepad2.right_stick_y;
             double babmPower = Range.clip(babmVal, -1, 1);
             if (gamepad2.right_stick_y == 0) babmPower = 0;
 
+            //BABM2
+            double baseMotor2Up = gamepad2.right_trigger;
+            double baseMotor2Down = gamepad2.left_trigger;
+            double babm2Power = Range.clip(baseMotor2Up - baseMotor2Down, -1.0, 1.0);
+
+            //BAHM
             double bahmVal = -gamepad2.left_stick_y;
-            double bahmPower = Range.clip(bahmVal, -0.35, 0.35);
-            if (bahmVal > 0.8 || bahmVal < -0.8) bahmPower = Range.clip(bahmVal, -1, 1);
+            double bahmPower = Range.clip(bahmVal, -0.4, 0.4);
+            if (bahmPower == 0) bahmPower = 0.02;
 
-            if (bahmPower == 0) bahmPower = 0.01;
-
-            buildArmBaseMotor.setPower(babmPower);
+            //SET POWERS
+            buildArmBaseMotor1.setPower(babmPower);
+            buildArmBaseMotor2.setPower(babm2Power);
             buildArmHighMotor.setPower(bahmPower);
-
 
             // Arm servos
 
-            double craneServoUp = gamepad2.right_trigger;
-            double craneServoDown = gamepad2.left_trigger;
-            double babsPower = craneServoUp - craneServoDown;
-
-            baseServoPosition = Range.clip(baseServoPosition + babsPower, 0, 1);
-            if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0) {
-                baseServoPosition = 0.52;
-            }
-            buildArmBaseServo.setPosition(baseServoPosition);
-
+            //HIGHARM
             if (gamepad2.x) {
                 // CLOSE HIGH ARM
                 buildArmHighServo.setPosition(0);
@@ -265,10 +254,18 @@ public class AiCitizensMecanumTele extends LinearOpMode {
                 buildArmHighServo.setPosition(0.8);
             }
 
-            // Balance Servo
-            balanceServoPosition = Range.clip(balanceServoPosition + gamepad2.left_stick_x, 0, 1);
-            buildArmBalanceServo.setPosition(balanceServoPosition);
+            //BALANCE SERVO
+            if (gamepad2.dpad_up) {
+                balanceServoPosition += 0.001;
+            } else {
+                if (gamepad2.dpad_down) {
+                    balanceServoPosition -= 0.001;
+                }
+            }
+            if (balanceServoPosition > 1) balanceServoPosition = 1;
+            if (balanceServoPosition < 1) balanceServoPosition = 0;
 
+            buildArmBalanceServo.setPower(gamepad2.left_stick_x);
 
             /*
 
@@ -305,9 +302,8 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             leftRearMotor.setPower(LR);
             rightRearMotor.setPower(RR);
 
-
             // Show telemetry info
-            /*telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
 
             telemetry.addData("Precision", "%.3f", joyScale);
 
@@ -315,17 +311,15 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             telemetry.addData("RF", "%.3f", RF);
             telemetry.addData("LR", "%.3f", LR);
             telemetry.addData("RR", "%.3f", RR);
-            */
+
+            /*
             telemetry.addData("BASE MOTOR", "%.3f",babmPower);
             telemetry.addData("HIGH MOTOR", "%.3f",bahmPower);
-            telemetry.addData("BASE SERVO", "%.3f",baseServoPosition);
-
-
+            telemetry.addData("y", "%.3f",lowArmBottomServo.getPosition());
+            */
             // telemetry.addData("Servos", "(%.2f)", servoPosition);
             // telemetry.addData("Servo read", "(%.2f)", readServoLeft);
             // telemetry.addData("Servo read", "(%.2f)", readServoRight);
-
-
 
             telemetry.update();
         }
