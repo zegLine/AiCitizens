@@ -794,12 +794,7 @@ public class AutonomieTensorFlowCuAxeGyroSiDistanta extends LinearOpMode {
 
 
                       }
-
-
                     }
-
-
-
                 }
                    moverightdistsensor(0.7,113.75);
                    releaseStone();
@@ -828,19 +823,5 @@ public class AutonomieTensorFlowCuAxeGyroSiDistanta extends LinearOpMode {
             tfod.shutdown();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
