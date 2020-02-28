@@ -32,12 +32,13 @@ public class AutoEncoderTest3 extends LinearOpMode {
         rightFrontMotor.setPower(1);
         rightRearMotor.setPower(1);
 
-        sleep(1000);
+        sleep(2000);
 
         telemetry.addData("Lf", leftFrontMotor.getCurrentPosition());
         telemetry.addData("Rf", rightFrontMotor.getCurrentPosition());
         telemetry.addData("Lr", leftRearMotor.getCurrentPosition());
         telemetry.addData("Rr", rightRearMotor.getCurrentPosition());
+
 
         telemetry.update();
         
