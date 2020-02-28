@@ -17,18 +17,18 @@ public class encoderTest extends LinearOpMode {
         leftFrontMotor= hardwareMap.dcMotor.get("leftFront");
         rightFrontMotor= hardwareMap.dcMotor.get("rightFront");
 
-        leftFrontMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        rightFrontMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         while(leftFrontMotor.getCurrentPosition() != 0 || rightFrontMotor.getCurrentPosition() != 0)
         {
-            leftFrontMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-            rightFrontMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             waitOneFullHardwareCycle();
         }
 
-        leftFrontMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        rightFrontMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        leftFrontMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODER);
+        rightFrontMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
@@ -47,8 +47,6 @@ public class encoderTest extends LinearOpMode {
 
         telemetry.addData("Lf", leftFrontMotor.getCurrentPosition());
         telemetry.addData("Rf", rightFrontMotor.getCurrentPosition());
-        telemetry.addData("Lr", leftRearMotor.getCurrentPosition());
-        telemetry.addData("Rr", rightRearMotor.getCurrentPosition());
 
         telemetry.update();
     }
