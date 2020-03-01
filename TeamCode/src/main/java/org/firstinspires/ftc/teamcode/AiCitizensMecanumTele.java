@@ -193,17 +193,17 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             // Calculate LOW ARM positions
             if (gamepad1.y){
-                lowArmBottomServo.setPosition(0.30);
-                lowArmHighServo.setPosition(0.1);
+                lowArmBottomServo.setPosition(1);
+                lowArmHighServo.setPosition(0.7);
                 sleep(1000);
-                lowArmBottomServo.setPosition(0.15);
+                lowArmBottomServo.setPosition(1);
             }
 
             if (gamepad1.a){
-                lowArmBottomServo.setPosition(0.5);
-                lowArmHighServo.setPosition(1);
+                lowArmHighServo.setPosition(0.5);
+                lowArmBottomServo.setPosition(0);
                 sleep(500);
-                lowArmBottomServo.setPosition(-0.5);
+                lowArmHighServo.setPosition(1);
 
             }
 
