@@ -183,10 +183,6 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             }
 
             if (closeTray){
-                leftFrontMotor.setPower(0);
-                rightFrontMotor.setPower(0);
-                leftRearMotor.setPower(0);
-                rightRearMotor.setPower(0);
                 trayServo1.setPosition(0.1);
                 trayServo2.setPosition(0.1);
             }
