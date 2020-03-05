@@ -321,14 +321,16 @@ public class AutonomieTensorFlow extends LinearOpMode {
         }
 
 
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
+
+
         waitForStart();
+
+        moveForward(0.5,22.75);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
 
-                moveForward(0.5,22.75);
+
 
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -346,20 +348,19 @@ public class AutonomieTensorFlow extends LinearOpMode {
                                if(ObjectAngle == 0){
 
                                      SkyStonePosition=2;
-                                     stoneGrabing();
                                }
                                if(ObjectAngle<=0){
 
                                    SkyStonePosition=1;
                                    moveLeft(0.3,8);
-                                   stoneGrabing();
+
 
                                }
                                if(ObjectAngle>=0){
 
                                    SkyStonePosition=3;
                                    moveRight(0.3,8);
-                                   stoneGrabing();
+
 
                                }
 
@@ -374,13 +375,7 @@ public class AutonomieTensorFlow extends LinearOpMode {
 
                 }
 
-                   moveRight(0.6,8*SkyStonePosition+47);
-                   releaseStone();
-                   moveLeft(0.6,60+SkyStonePosition*8);
-                   stoneGrabing();
-                   moveRight(0.6,60+SkyStonePosition*8);
-                   releaseStone();
-                   moveLeft(0.3,10);
+
 
 
                    if(Found == true)
@@ -388,6 +383,13 @@ public class AutonomieTensorFlow extends LinearOpMode {
 
             }
         }
+        moveRight(0.6,8*SkyStonePosition+47);
+        releaseStone();
+        moveLeft(0.6,60+SkyStonePosition*8);
+        stoneGrabing();
+        moveRight(0.6,60+SkyStonePosition*8);
+        releaseStone();
+        moveLeft(0.3,10);
 
         if (tfod != null) {
             tfod.shutdown();

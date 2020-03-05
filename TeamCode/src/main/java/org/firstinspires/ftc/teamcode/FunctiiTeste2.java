@@ -64,6 +64,101 @@ public class FunctiiTeste2 extends LinearOpMode {
     private DcMotor leftRearMotor = null;
     private DcMotor rightRearMotor = null;
 
+    private Servo trayservo1 = null;
+    private Servo trayservo2 = null;
+
+    private Servo lowarmUp = null;
+    private Servo lowarmDown = null;
+
+
+
+
+
+    public void moveForward(long time, double power) {
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
+
+    public void moveBackward(long time, double power) {
+
+        power -= power;
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
+
+    public void moveLeft(long time, double power) {
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(-power);
+
+        sleep(time);
+    }
+
+    public void moveRight(long time, double power) {
+
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
+
+    public void turnLeft(long time, double power) {
+
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
+        leftRearMotor.setPower(power);
+        rightRearMotor.setPower(-power);
+
+        sleep(time);
+    }
+
+    public void turnRight(long time, double power) {
+
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
+        leftRearMotor.setPower(-power);
+        rightRearMotor.setPower(power);
+
+        sleep(time);
+    }
+
+    public void grabStone() {
+
+        moveForward(150, 1);
+        lowarmUp.setPosition(0.25);
+        lowarmDown.setPosition(-1);
+        moveBackward(300,1);
+
+    }
+
+    public void grabtray(){
+
+        trayservo1.setPosition(1);
+        trayservo2.setPosition(1);
+
+    }
+
+    public void opentray(){
+
+        trayservo1.setPosition(0);
+        trayservo2.setPosition(0);
+    }
+
+
     @Override
     public void runOpMode() {
 
@@ -82,10 +177,10 @@ public class FunctiiTeste2 extends LinearOpMode {
 
         waitForStart();
 
-        leftFrontMotor.setTargetPosition(1120);
-        leftRearMotor.setTargetPosition(1120);
-        rightFrontMotor.setTargetPosition(1120);
-        rightRearMotor.setTargetPosition(1120);
+        leftFrontMotor.setTargetPosition(11200);
+        leftRearMotor.setTargetPosition(11200);
+        rightFrontMotor.setTargetPosition(11200);
+        rightRearMotor.setTargetPosition(11200);
 
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRearMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

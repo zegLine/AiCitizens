@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="Parcare", group="Autonomous")
-public class AutoEncoderTest extends LinearOpMode {
+@Autonomous(name="ParcarePodRosu", group="Autonomous")
+public class ParcarePodRosu extends LinearOpMode {
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -47,8 +47,8 @@ public class AutoEncoderTest extends LinearOpMode {
 
     public void moveLeft(long time, double power) {
 
-        leftFrontMotor.setPower(power);
-        rightFrontMotor.setPower(-power);
+        leftFrontMotor.setPower(-power);
+        rightFrontMotor.setPower(power);
         leftRearMotor.setPower(power);
         rightRearMotor.setPower(-power);
 
@@ -57,8 +57,8 @@ public class AutoEncoderTest extends LinearOpMode {
 
     public void moveRight(long time, double power) {
 
-        leftFrontMotor.setPower(-power);
-        rightFrontMotor.setPower(power);
+        leftFrontMotor.setPower(power);
+        rightFrontMotor.setPower(-power);
         leftRearMotor.setPower(-power);
         rightRearMotor.setPower(power);
 
@@ -122,7 +122,8 @@ public class AutoEncoderTest extends LinearOpMode {
 
         waitForStart();
 
-        moveForward(1600,0.3);
+        moveForward(1800,0.3);
+        moveLeft(3200,0.4);
 
 
 

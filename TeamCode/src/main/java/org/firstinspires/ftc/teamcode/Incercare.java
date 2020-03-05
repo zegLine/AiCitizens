@@ -53,7 +53,7 @@
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "AutonomieTensorFlowCuAxe", group = "Autonomous")
+@Autonomous(name = "Incercam", group = "Autonomous")
 
 
 public class Incercare extends LinearOpMode {
@@ -110,20 +110,24 @@ public class Incercare extends LinearOpMode {
 
 
 
-        while (leftFrontMotor.isBusy() && leftRearMotor.isBusy() && rightFrontMotor.isBusy() &&  rightRearMotor.isBusy()){
+        while (leftFrontMotor.isBusy() || leftRearMotor.isBusy() || rightFrontMotor.isBusy() || rightRearMotor.isBusy()){
 
 
         }
 
-        leftFrontMotor.setPower(0);
-        rightFrontMotor.setPower(0);
-        leftRearMotor.setPower(0);
-        rightRearMotor.setPower(0);
+        if(leftFrontMotor.getCurrentPosition()==encoderDrivingTarget && rightFrontMotor.getCurrentPosition()==encoderDrivingTarget && leftRearMotor.getCurrentPosition()==encoderDrivingTarget && rightRearMotor.getCurrentPosition()==encoderDrivingTarget)
+        {
+            leftFrontMotor.setPower(0);
+            rightFrontMotor.setPower(0);
+            leftRearMotor.setPower(0);
+            rightRearMotor.setPower(0);
+        }
 
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
     }
@@ -155,7 +159,7 @@ public class Incercare extends LinearOpMode {
 
 
 
-        while (leftFrontMotor.isBusy() && leftRearMotor.isBusy() && rightFrontMotor.isBusy() &&  rightRearMotor.isBusy()) {
+        while (leftFrontMotor.isBusy() || leftRearMotor.isBusy() || rightFrontMotor.isBusy() || rightRearMotor.isBusy()) {
 
 
         }
@@ -195,7 +199,7 @@ public class Incercare extends LinearOpMode {
 
 
 
-        while (leftFrontMotor.isBusy() && leftRearMotor.isBusy() && rightFrontMotor.isBusy() &&  rightRearMotor.isBusy()){
+        while (leftFrontMotor.isBusy() || leftRearMotor.isBusy() || rightFrontMotor.isBusy() || rightRearMotor.isBusy()){
 
 
 
@@ -236,7 +240,7 @@ public class Incercare extends LinearOpMode {
 
 
 
-        while (leftFrontMotor.isBusy() && leftRearMotor.isBusy() && rightFrontMotor.isBusy() &&  rightRearMotor.isBusy()){
+        while (leftFrontMotor.isBusy() || leftRearMotor.isBusy() || rightFrontMotor.isBusy() || rightRearMotor.isBusy()){
 
 
         }
@@ -277,7 +281,7 @@ public class Incercare extends LinearOpMode {
 
 
 
-        while (leftFrontMotor.isBusy() && leftRearMotor.isBusy() && rightFrontMotor.isBusy() &&  rightRearMotor.isBusy()){
+        while (leftFrontMotor.isBusy() || leftRearMotor.isBusy() || rightFrontMotor.isBusy() || rightRearMotor.isBusy()){
 
 
 
@@ -463,13 +467,14 @@ public class Incercare extends LinearOpMode {
 
         waitForStart();
 
+        moveForward(0.5, 0.5);
 
         if (opModeIsActive()) {
             while(opModeIsActive()) {
 
 
-                Orientation = 1;
-                moveForward(0.5, 0.5);
+
+
 
                 if (tfod != null) {
 
@@ -493,14 +498,12 @@ public class Incercare extends LinearOpMode {
 
                                     SkyStonePosition = 1;
                                     moveLeft(0.3, 0.25);
-                                    stoneGrabing();
 
                                 }
                                 if (ObjectAngle >= 0) {
 
                                     SkyStonePosition = 3;
                                     moveRight(0.3, 0.25);
-                                    stoneGrabing();
 
                                 }
 
@@ -515,18 +518,20 @@ public class Incercare extends LinearOpMode {
 
 
                 }
-                moveRight(0.6, SkyStoneSize * SkyStonePosition + 2);
-                releaseStone();
-                moveLeft(0.6, 3 + SkyStonePosition * SkyStoneSize);
-                stoneGrabing();
-                moveRight(0.6, 3 + SkyStonePosition * SkyStoneSize);
-                releaseStone();
-                moveLeft(0.3, 0.7);
 
 
             }
 
         }
+        stoneGrabing();
+        moveRight(0.6, SkyStoneSize * SkyStonePosition + 2);
+        releaseStone();
+        moveLeft(0.6, 3 + SkyStonePosition * SkyStoneSize);
+        stoneGrabing();
+        moveRight(0.6, 3 + SkyStonePosition * SkyStoneSize);
+        releaseStone();
+        moveLeft(0.3, 0.7);
+
 
         if (tfod != null) {
             tfod.shutdown();

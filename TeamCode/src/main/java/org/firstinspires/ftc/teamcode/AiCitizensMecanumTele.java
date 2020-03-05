@@ -99,6 +99,8 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
     private double balanceServoPosition = 0.5;
 
+    private CRServo measuringTapeServo = null;
+
 
     public void initializeAll() {
         // Initialize motors
@@ -111,6 +113,12 @@ public class AiCitizensMecanumTele extends LinearOpMode {
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRearMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRearMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 
 
         // Initialize tray servos
@@ -136,6 +144,7 @@ public class AiCitizensMecanumTele extends LinearOpMode {
         buildArmHighServo = hardwareMap.get(Servo.class, "buildArmHighServo");
 
         buildArmBalanceServo = hardwareMap.get(CRServo.class, "buildArmBalanceServo");
+        measuringTapeServo = hardwareMap.get(CRServo.class, "measuringTapeServo");
 
         buildArmBaseMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
         buildArmBaseMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -144,6 +153,8 @@ public class AiCitizensMecanumTele extends LinearOpMode {
         buildArmHighServo.setDirection(Servo.Direction.FORWARD);
 
         buildArmBalanceServo.setDirection(CRServo.Direction.FORWARD);
+
+
 
     }
 
@@ -183,10 +194,7 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             }
 
             if (closeTray){
-                leftFrontMotor.setPower(0);
-                rightFrontMotor.setPower(0);
-                leftRearMotor.setPower(0);
-                rightRearMotor.setPower(0);
+
                 trayServo1.setPosition(0.1);
                 trayServo2.setPosition(0.1);
             }
@@ -207,6 +215,14 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             }
 
+            if(gamepad1.y){
+
+                leftFrontMotor.setPower(0);
+                rightFrontMotor.setPower(0);
+                leftRearMotor.setPower(0);
+                rightRearMotor.setPower(0);
+            }
+
             /*
 
                 BUILD ARM
@@ -220,6 +236,8 @@ public class AiCitizensMecanumTele extends LinearOpMode {
                 Arm grab servo is mapped to GAMEPAD2 X and B buttons
 
             */
+
+
 
             // Motors
 
@@ -235,8 +253,22 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             //BAHM
             double bahmVal = -gamepad2.left_stick_y;
-            double bahmPower = Range.clip(bahmVal, -0.4, 0.4);
-            if (bahmPower == 0) bahmPower = 0.02;
+            double bahmPower = Range.clip(bahmVal, -0.6, 0.6);
+            if (bahmPower == 0) bahmPower = 0.09;
+            if(gamepad2.right_bumper){
+                bahmPower = Range.clip(bahmVal,-0.4,0.4);
+                telemetry.addData("power",0.4);
+                telemetry.update();
+            }
+
+            if(gamepad2.left_bumper){
+                bahmPower = Range.clip(bahmVal,-0.6,0.6);
+                telemetry.addData("power",0.6);
+                telemetry.update();
+            }
+
+
+
 
             //SET POWERS
             buildArmBaseMotor1.setPower(babmPower);
@@ -266,6 +298,21 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             if (balanceServoPosition < 1) balanceServoPosition = 0;
 
             buildArmBalanceServo.setPower(gamepad2.left_stick_x);
+
+
+
+
+
+            //Parking Measuring Tape
+
+              while(gamepad2.left_bumper)
+              {
+                  measuringTapeServo.setPower(0.5);
+              }
+              while(gamepad2.right_bumper)
+              {
+                  measuringTapeServo.setPower(0.5);
+              }
 
             /*
 
