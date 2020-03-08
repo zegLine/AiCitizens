@@ -177,6 +177,8 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             boolean closeTray = gamepad1.left_bumper;
             boolean openTray = gamepad1.right_bumper;
 
+            lowArmBottomServo.setPosition(0.3);
+
             if (openTray){
                 trayServo1.setPosition(0.5);
                 trayServo2.setPosition(0.5);
@@ -189,19 +191,18 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             // Calculate LOW ARM positions
             if (gamepad1.y){
-                lowArmBottomServo.setPosition(1);
+
                 lowArmHighServo.setPosition(0.7);
-                sleep(1000);
-                lowArmBottomServo.setPosition(1);
+
             }
 
             if (gamepad1.a){
+
                 lowArmHighServo.setPosition(0.5);
-                lowArmBottomServo.setPosition(0);
-                sleep(500);
-                lowArmHighServo.setPosition(1);
 
             }
+
+
 
             /*
 
