@@ -87,9 +87,6 @@ public class AiCitizensMecanumTele extends LinearOpMode {
     private Servo lowArmBottomServo = null;
     private Servo lowArmHighServo = null;
 
-    double lowarmhighpos = 1;
-    double lowarmbottompos = 0;
-
     // BUILD ARM ----------------
 
     private DcMotor buildArmBaseMotor1 = null;
@@ -192,24 +189,19 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             // Calculate LOW ARM positions
             if (gamepad1.y){
-                lowarmhighpos = 0.95;
+                lowArmBottomServo.setPosition(1);
+                lowArmHighServo.setPosition(0.7);
+                sleep(1000);
+                lowArmBottomServo.setPosition(1);
             }
 
             if (gamepad1.a){
-                lowarmhighpos = 0.3;
-            }
+                lowArmHighServo.setPosition(0.5);
+                lowArmBottomServo.setPosition(0);
+                sleep(500);
+                lowArmHighServo.setPosition(1);
 
-            if (gamepad1.x) {
-                lowarmbottompos = 0.8;
             }
-
-            if (gamepad1.b) {
-                lowarmbottompos = 0.05;
-                lowarmhighpos = 1;
-            }
-
-            lowArmBottomServo.setPosition(lowarmbottompos);
-            lowArmHighServo.setPosition(lowarmhighpos);
 
             /*
 
