@@ -87,6 +87,9 @@ public class AiCitizensMecanumTele extends LinearOpMode {
     private Servo lowArmBottomServo = null;
     private Servo lowArmHighServo = null;
 
+    double lowarmhighpos = 1;
+    double lowarmbottompos = 0;
+
     // BUILD ARM ----------------
 
     private DcMotor buildArmBaseMotor1 = null;
@@ -177,8 +180,6 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             boolean closeTray = gamepad1.left_bumper;
             boolean openTray = gamepad1.right_bumper;
 
-            lowArmBottomServo.setPosition(0.3);
-
             if (openTray){
                 trayServo1.setPosition(0.5);
                 trayServo2.setPosition(0.5);
@@ -191,20 +192,24 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             // Calculate LOW ARM positions
             if (gamepad1.y){
-                lowArmHighServo.setPosition(0.7);
+                lowarmhighpos = 0.95;
             }
 
             if (gamepad1.a){
-                lowArmHighServo.setPosition(0.5);
+                lowarmhighpos = 0.3;
             }
 
             if (gamepad1.x) {
-                lowArmBottomServo.setPosition(1);
+                lowarmbottompos = 0.8;
             }
 
             if (gamepad1.b) {
-                lowArmBottomServo.setPosition(0);
+                lowarmbottompos = 0.05;
+                lowarmhighpos = 1;
             }
+
+            lowArmBottomServo.setPosition(lowarmbottompos);
+            lowArmHighServo.setPosition(lowarmhighpos);
 
             /*
 
@@ -304,7 +309,10 @@ public class AiCitizensMecanumTele extends LinearOpMode {
             // Show telemetry info
             telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-            telemetry.addData("Precision", "%.3f", joyScale);
+            //telemetry.addData("Precision", "%.3f", joyScale);
+
+            telemetry.addData("LAH", lowArmHighServo.getPosition());
+            telemetry.addData("LAB", lowArmBottomServo.getPosition());
 
             telemetry.addData("LF", "%.3f", LF);
             telemetry.addData("RF", "%.3f", RF);
