@@ -99,6 +99,9 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
     private double balanceServoPosition = 0.5;
 
+    // RULER SERVO
+
+    private CRServo rulerServo = null;
 
     public void initializeAll() {
         // Initialize motors
@@ -145,6 +148,10 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
         buildArmBalanceServo.setDirection(CRServo.Direction.FORWARD);
 
+        // Initialize the RULER MECHANISM
+
+        rulerServo = hardwareMap.get(CRServo.class, "rulerServo");
+        rulerServo.setDirection(CRServo.Direction.FORWARD);
     }
 
 
@@ -172,6 +179,10 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             if (gamepad1.x && joyScale == precisionMin) joyScale = precisionMax;
             if (gamepad1.x && joyScale == precisionMax) joyScale = precisionMin;
+
+            // Ruler Servo positions
+
+            rulerServo.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
 
             // Tray servos positions
             boolean closeTray = gamepad1.left_bumper;
