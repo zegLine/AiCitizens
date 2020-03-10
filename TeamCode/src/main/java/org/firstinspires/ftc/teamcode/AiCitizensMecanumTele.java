@@ -182,7 +182,7 @@ public class AiCitizensMecanumTele extends LinearOpMode {
 
             // Ruler Servo positions
 
-            rulerServo.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+            rulerServo.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
 
             // Tray servos positions
             boolean closeTray = gamepad1.left_bumper;
