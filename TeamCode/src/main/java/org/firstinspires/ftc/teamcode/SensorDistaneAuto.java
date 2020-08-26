@@ -126,19 +126,44 @@ public class SensorDistaneAuto extends LinearOpMode {
             rightRearMotor.setPower(-manouverpower);
             sleep(2000);
 
-            //FRONT
-            leftFrontMotor.setPower(manouverpower);
-            leftRearMotor.setPower(manouverpower);
-            rightFrontMotor.setPower(manouverpower);
-            rightRearMotor.setPower(manouverpower);
-            sleep(2200);
+            distance = sensorDistance.getDistance(DistanceUnit.CM);
+            if (distance < 10) {
+                //RIGHT 2 BLOCKS
+                leftFrontMotor.setPower(manouverpower);
+                leftRearMotor.setPower(-manouverpower);
+                rightFrontMotor.setPower(-manouverpower);
+                rightRearMotor.setPower(manouverpower);
+                sleep(4000);
 
-            //RIGHT
-            leftFrontMotor.setPower(manouverpower);
-            leftRearMotor.setPower(-manouverpower);
-            rightFrontMotor.setPower(-manouverpower);
-            rightRearMotor.setPower(manouverpower);
-            sleep(2000);
+                //FRONT
+                leftFrontMotor.setPower(manouverpower);
+                leftRearMotor.setPower(manouverpower);
+                rightFrontMotor.setPower(manouverpower);
+                rightRearMotor.setPower(manouverpower);
+                sleep(2200);
+
+                //LEFT
+                leftFrontMotor.setPower(-manouverpower);
+                leftRearMotor.setPower(manouverpower);
+                rightFrontMotor.setPower(manouverpower);
+                rightRearMotor.setPower(-manouverpower);
+                sleep(2000);
+
+            } else {
+                //FRONT
+                leftFrontMotor.setPower(manouverpower);
+                leftRearMotor.setPower(manouverpower);
+                rightFrontMotor.setPower(manouverpower);
+                rightRearMotor.setPower(manouverpower);
+                sleep(2200);
+
+                //RIGHT
+                leftFrontMotor.setPower(manouverpower);
+                leftRearMotor.setPower(-manouverpower);
+                rightFrontMotor.setPower(-manouverpower);
+                rightRearMotor.setPower(manouverpower);
+                sleep(2000);
+            }
 
         }
 
