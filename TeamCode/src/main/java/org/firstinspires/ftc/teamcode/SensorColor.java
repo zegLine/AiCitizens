@@ -33,125 +33,134 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
 
-
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
+/*
+ * This is an example LinearOpMode that shows how to use
+ * the REV Robotics Color-Distance Sensor.
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
+ * It assumes the sensor is configured with the name "sensor_color_distance".
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
+@Autonomous(name = "Sensor: REVColorDistance", group = "Sensor")
+public class SensorColor extends LinearOpMode {
 
-@TeleOp(name="Telemetry Sensor", group="Tests")
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
 
-public class TelmetrySensor extends LinearOpMode {
-
-    // Declare OpMode members.
-
-    // Runtime
-    private ElapsedTime runtime = new ElapsedTime();
-
-    // Wheels motors
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
     private DcMotor leftRearMotor = null;
     private DcMotor rightRearMotor = null;
 
-    // Sensors
-    private ColorSensor sensorColor = null;
-    private DistanceSensor sensorDistance;
-    private DigitalChannel digitalTouch = null;
+    float hsvValues[] = {0F, 0F, 0F};
+    final float values[] = hsvValues;
+    final double SCALE_FACTOR = 150;
 
-    public void initializeAll() {
-        // Initialize motors
+    double power = 0.1;
+
+    @Override
+    public void runOpMode() {
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
         rightFrontMotor = hardwareMap.dcMotor.get("rightFront");
         leftRearMotor = hardwareMap.dcMotor.get("leftRear");
         rightRearMotor = hardwareMap.dcMotor.get("rightRear");
 
-        // Initialize sensors
-        sensorColor = hardwareMap.colorSensor.get("sensor_color_distance");
-
-        sensorColor.enableLed(false);
-
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
-
-        //digitalTouch = hardwareMap.digitalChannel.get("digitalTouch");
-        //digitalTouch.setMode(DigitalChannel.Mode.INPUT);
-
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
-    }
 
-    @Override
-    public void runOpMode() {
-
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        initializeAll();
-
-        float hsvValues[] = {0F, 0F, 0F};
-        final float values[] = hsvValues;
-        final double SCALE_FACTOR = 255;
-
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
 
-            sensorColor.enableLed(false);
-            // Color conversion logic RGB to HSV
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        while(!(hsvValues[0] < 30 || hsvValues[0] > 330)) {
+            leftFrontMotor.setPower(power);
+            leftRearMotor.setPower(power);
+            rightFrontMotor.setPower(power);
+            rightRearMotor.setPower(power);
+
+            telemetry.addData("Alpha", sensorColor.alpha());
+            telemetry.addData("Red  ", sensorColor.red());
+            telemetry.addData("Green", sensorColor.green());
+            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
+            telemetry.update();
+
             Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                     (int) (sensorColor.green() * SCALE_FACTOR),
                     (int) (sensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
 
-            // Color sensor telemetry
-            telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            //telemetry.addData("Alpha", sensorColor.alpha());
+        }
+
+        leftFrontMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        rightRearMotor.setPower(0);
+
+        leftFrontMotor.setPower(0.2);
+        leftRearMotor.setPower(0.2);
+        rightFrontMotor.setPower(0.2);
+        rightRearMotor.setPower(0.2);
+
+        sleep(1000);
+
+        leftFrontMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        rightRearMotor.setPower(0);
+
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        while(!(hsvValues[0] < 250 || hsvValues[0] > 210)) {
+            leftFrontMotor.setPower(power);
+            leftRearMotor.setPower(power);
+            rightFrontMotor.setPower(power);
+            rightRearMotor.setPower(power);
+
+            telemetry.addData("Alpha", sensorColor.alpha());
             telemetry.addData("Red  ", sensorColor.red());
             telemetry.addData("Green", sensorColor.green());
             telemetry.addData("Blue ", sensorColor.blue());
-            telemetry.addData("Color", Color.HSVToColor(0xff, values));
             telemetry.addData("Hue", hsvValues[0]);
-
-            /*
-            // Touch sensor telemetry
-            if (digitalTouch.getState() == true) {
-                telemetry.addData("Digital Touch", "Is Not Pressed");
-            } else {
-                telemetry.addData("Digital Touch", "Is Pressed");
-            }*/
-
-            // Update telemetry and add the runtime
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
+
+            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                    (int) (sensorColor.green() * SCALE_FACTOR),
+                    (int) (sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
+
         }
+
+        telemetry.addData("Alpha", sensorColor.alpha());
+        telemetry.addData("Red  ", sensorColor.red());
+        telemetry.addData("Green", sensorColor.green());
+        telemetry.addData("Blue ", sensorColor.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+        telemetry.update();
+
     }
 }

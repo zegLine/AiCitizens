@@ -13,9 +13,6 @@ public class AutoTestSensors extends LinearOpMode {
     private DcMotor leftRearMotor = null;
     private DcMotor rightRearMotor = null;
 
-    private Servo lowArmBottomServo = null;
-    private Servo lowArmHighServo = null;
-
     double circumference = 3.1415 * 3.93701;
 
 
@@ -40,13 +37,6 @@ public class AutoTestSensors extends LinearOpMode {
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
-
-        // Initialize the low (bottom) arm
-        lowArmBottomServo = hardwareMap.get(Servo.class, "lowarmdown");
-        lowArmHighServo = hardwareMap.get(Servo.class, "lowarmup");
-
-        lowArmBottomServo.setDirection(Servo.Direction.REVERSE);
-        lowArmHighServo.setDirection(Servo.Direction.FORWARD);
     }
 
     public void moveF (double distance, double power) {
