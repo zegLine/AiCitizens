@@ -75,25 +75,25 @@ public class SensorDistanceAuto2 extends LinearOpMode {
     double manouverpower = 0.3;
 
     int robotpos = 0;
-
-    public void moveRight() {
+    //Move to the right the given amount of tiles
+    public void moveRight(int tiles) {
         System.out.println("Move right...");
         robotpos += 1;
         leftFrontMotor.setPower(manouverpower);
         leftRearMotor.setPower(-manouverpower);
         rightFrontMotor.setPower(-manouverpower);
         rightRearMotor.setPower(manouverpower);
-        sleep(2000);
+        sleep(tiles * 2000);
     }
-
-    public void moveLeft() {
+    //Move to the left the given amount of tiles
+    public void moveLeft(int tiles) {
         System.out.println("Move left...");
         robotpos -= 1;
         leftFrontMotor.setPower(-manouverpower);
         leftRearMotor.setPower(manouverpower);
         rightFrontMotor.setPower(manouverpower);
         rightRearMotor.setPower(-manouverpower);
-        sleep(2000);
+        sleep(tiles * 2000);
     }
 
     @Override
@@ -145,22 +145,21 @@ public class SensorDistanceAuto2 extends LinearOpMode {
 
             switch (robotpos){
                 case -1:
-                    moveRight();
+                    moveRight(1);
                     distance = sensorDistance.getDistance(DistanceUnit.CM);
-                    if (distance < 5) moveRight();
+                    if (distance < 5) moveRight(1);
                     break;
                 case 0:
-                    moveLeft();
+                    moveLeft(1);
                     distance = sensorDistance.getDistance(DistanceUnit.CM);
                     if (distance < 5) {
-                        moveRight();
-                        moveRight();
+                        moveRight(2);
                     }
                     break;
                 case 1:
-                    moveLeft();
+                    moveLeft(1);
                     distance = sensorDistance.getDistance(DistanceUnit.CM);
-                    if (distance < 5) moveLeft();
+                    if (distance < 5) moveLeft(1);
                     break;
             }
 
