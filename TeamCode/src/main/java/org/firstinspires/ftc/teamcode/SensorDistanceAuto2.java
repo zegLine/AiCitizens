@@ -78,7 +78,7 @@ public class SensorDistanceAuto2 extends LinearOpMode {
     //Move to the right the given amount of tiles
     public void moveRight(int tiles) {
         System.out.println("Move right...");
-        robotpos += 1;
+        robotpos += tiles;
         leftFrontMotor.setPower(manouverpower);
         leftRearMotor.setPower(-manouverpower);
         rightFrontMotor.setPower(-manouverpower);
@@ -88,7 +88,7 @@ public class SensorDistanceAuto2 extends LinearOpMode {
     //Move to the left the given amount of tiles
     public void moveLeft(int tiles) {
         System.out.println("Move left...");
-        robotpos -= 1;
+        robotpos -= tiles;
         leftFrontMotor.setPower(-manouverpower);
         leftRearMotor.setPower(manouverpower);
         rightFrontMotor.setPower(manouverpower);
