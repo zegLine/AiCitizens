@@ -27,23 +27,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
-import android.app.Activity;
 import android.graphics.Color;
-import android.view.View;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.util.Locale;
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -54,11 +52,13 @@ import java.util.Locale;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Sensor: REVColorDistance", group = "Sensor")
-public class SensorColor extends LinearOpMode {
+@Autonomous(name = "Sensor Distance Autos", group = "Sensor")
+public class SensorDistaneAuto extends LinearOpMode {
 
     ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
+    DistanceSensor sensorCDistance;
+    DigitalChannel sensorTouch;
+    Rev2mDistanceSensor sensorDistance;
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -69,12 +69,16 @@ public class SensorColor extends LinearOpMode {
     final float values[] = hsvValues;
     final double SCALE_FACTOR = 150;
 
-    double power = 0.1;
+    double maxpower = 0.5;
+    double power;
+    double manouverpower = 0.3;
 
     @Override
     public void runOpMode() {
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        sensorCDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        sensorTouch = hardwareMap.get(DigitalChannel.class, "sensor_touch");
+        sensorDistance = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_distance");
 
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
         rightFrontMotor = hardwareMap.dcMotor.get("rightFront");
@@ -88,72 +92,82 @@ public class SensorColor extends LinearOpMode {
 
         waitForStart();
 
-        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                (int) (sensorColor.green() * SCALE_FACTOR),
-                (int) (sensorColor.blue() * SCALE_FACTOR),
-                hsvValues);
+        while(opModeIsActive()) {
 
-        while(!(hsvValues[0] < 30 || hsvValues[0] > 330)) {
-            leftFrontMotor.setPower(power);
-            leftRearMotor.setPower(power);
-            rightFrontMotor.setPower(power);
-            rightRearMotor.setPower(power);
+            double distance = sensorDistance.getDistance(DistanceUnit.CM);
 
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-            telemetry.update();
+            while (distance > 3.5) {
 
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
+                if (sensorTouch.getState() == false) {
+                    break;
+                }
+
+                power = (Math.pow(1.05, distance) - 1) / (Math.pow(1.05, distance) + 1);
+                if (power > maxpower) power = maxpower;
+                if (power < 0) power = 0;
+
+                leftFrontMotor.setPower(power);
+                leftRearMotor.setPower(power);
+                rightFrontMotor.setPower(power);
+                rightRearMotor.setPower(power);
+
+                telemetry.addData("Power", power);
+                telemetry.addData("Dist", distance);
+                telemetry.addData("Pressed", sensorTouch.getState());
+                telemetry.update();
+
+                distance = sensorDistance.getDistance(DistanceUnit.CM);
+            }
+
+            //LEFT
+            leftFrontMotor.setPower(-manouverpower);
+            leftRearMotor.setPower(manouverpower);
+            rightFrontMotor.setPower(manouverpower);
+            rightRearMotor.setPower(-manouverpower);
+            sleep(2000);
+
+            distance = sensorDistance.getDistance(DistanceUnit.CM);
+            if (distance < 10) {
+                //RIGHT 2 BLOCKS
+                leftFrontMotor.setPower(manouverpower);
+                leftRearMotor.setPower(-manouverpower);
+                rightFrontMotor.setPower(-manouverpower);
+                rightRearMotor.setPower(manouverpower);
+                sleep(4000);
+
+                //FRONT
+                leftFrontMotor.setPower(manouverpower);
+                leftRearMotor.setPower(manouverpower);
+                rightFrontMotor.setPower(manouverpower);
+                rightRearMotor.setPower(manouverpower);
+                sleep(2200);
+
+                //LEFT
+                leftFrontMotor.setPower(-manouverpower);
+                leftRearMotor.setPower(manouverpower);
+                rightFrontMotor.setPower(manouverpower);
+                rightRearMotor.setPower(-manouverpower);
+                sleep(2000);
+
+            } else {
+                //FRONT
+                leftFrontMotor.setPower(manouverpower);
+                leftRearMotor.setPower(manouverpower);
+                rightFrontMotor.setPower(manouverpower);
+                rightRearMotor.setPower(manouverpower);
+                sleep(2200);
+
+                //RIGHT
+                leftFrontMotor.setPower(manouverpower);
+                leftRearMotor.setPower(-manouverpower);
+                rightFrontMotor.setPower(-manouverpower);
+                rightRearMotor.setPower(manouverpower);
+                sleep(2000);
+            }
 
         }
 
-        leftFrontMotor.setPower(0);
-        leftRearMotor.setPower(0);
-        rightFrontMotor.setPower(0);
-        rightRearMotor.setPower(0);
 
-        leftFrontMotor.setPower(0.2);
-        leftRearMotor.setPower(0.2);
-        rightFrontMotor.setPower(0.2);
-        rightRearMotor.setPower(0.2);
-
-        sleep(1000);
-
-        leftFrontMotor.setPower(0);
-        leftRearMotor.setPower(0);
-        rightFrontMotor.setPower(0);
-        rightRearMotor.setPower(0);
-
-        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                (int) (sensorColor.green() * SCALE_FACTOR),
-                (int) (sensorColor.blue() * SCALE_FACTOR),
-                hsvValues);
-
-        while(!(hsvValues[0] < 250 || hsvValues[0] > 210)) {
-            leftFrontMotor.setPower(power);
-            leftRearMotor.setPower(power);
-            rightFrontMotor.setPower(power);
-            rightRearMotor.setPower(power);
-
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-            telemetry.update();
-
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
-
-        }
 
         telemetry.addData("Alpha", sensorColor.alpha());
         telemetry.addData("Red  ", sensorColor.red());

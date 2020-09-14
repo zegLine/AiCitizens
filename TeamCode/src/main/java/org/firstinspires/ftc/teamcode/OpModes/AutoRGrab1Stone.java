@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="BOTH Park near Wall", group="Red")
-public class AutoParkBridgeRight extends LinearOpMode {
+@Autonomous(name="RED Grab 1 Stone", group="Red")
+public class AutoRGrab1Stone extends LinearOpMode {
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -289,8 +289,20 @@ public class AutoParkBridgeRight extends LinearOpMode {
         initializeAll();
         waitForStart();
 
-        moveF(10, 0.3);
-        moveL(10, 0.3);
+        moveF(30.5, 0.3);
+        lowArmBottomServo.setPosition(1);
+        lowArmHighServo.setPosition(0.7);
+        sleep(1000);
+        lowArmBottomServo.setPosition(1);
+        moveB(10, 0.3);
+        moveR(48, 0.3);
+        lowArmHighServo.setPosition(0.5);
+        lowArmBottomServo.setPosition(0);
+        sleep(500);
+        lowArmHighServo.setPosition(1);
+        moveL(25, 0.3);
+        moveF(10, 0.5);
+
 
         telemetry.addData("Status", "Done");
         telemetry.update();

@@ -27,22 +27,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
-import android.util.Log;
-import android.util.LogPrinter;
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
 
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import java.util.logging.Logger;
+import java.util.Locale;
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -53,13 +54,11 @@ import java.util.logging.Logger;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Sensor Distance Autos 2", group = "Sensor")
-public class SensorDistanceAuto2 extends LinearOpMode {
+@Autonomous(name = "Sensor: REVColorDistance", group = "Sensor")
+public class SensorColor extends LinearOpMode {
 
     ColorSensor sensorColor;
-    DistanceSensor sensorCDistance;
-    DigitalChannel sensorTouch;
-    Rev2mDistanceSensor sensorDistance;
+    DistanceSensor sensorDistance;
 
     private DcMotor leftFrontMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -70,38 +69,12 @@ public class SensorDistanceAuto2 extends LinearOpMode {
     final float values[] = hsvValues;
     final double SCALE_FACTOR = 150;
 
-    double maxpower = 0.5;
-    double power;
-    double manouverpower = 0.3;
-
-    int robotpos = 0;
-    //Move to the right the given amount of tiles
-    public void moveRight(int tiles) {
-        System.out.println("Move right...");
-        robotpos += tiles;
-        leftFrontMotor.setPower(manouverpower);
-        leftRearMotor.setPower(-manouverpower);
-        rightFrontMotor.setPower(-manouverpower);
-        rightRearMotor.setPower(manouverpower);
-        sleep(tiles * 2000);
-    }
-    //Move to the left the given amount of tiles
-    public void moveLeft(int tiles) {
-        System.out.println("Move left...");
-        robotpos -= tiles;
-        leftFrontMotor.setPower(-manouverpower);
-        leftRearMotor.setPower(manouverpower);
-        rightFrontMotor.setPower(manouverpower);
-        rightRearMotor.setPower(-manouverpower);
-        sleep(tiles * 2000);
-    }
+    double power = 0.1;
 
     @Override
     public void runOpMode() {
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorCDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
-        sensorTouch = hardwareMap.get(DigitalChannel.class, "sensor_touch");
-        sensorDistance = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_distance");
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
 
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
         rightFrontMotor = hardwareMap.dcMotor.get("rightFront");
@@ -115,53 +88,70 @@ public class SensorDistanceAuto2 extends LinearOpMode {
 
         waitForStart();
 
-        while(opModeIsActive()) {
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
 
-            double distance = sensorDistance.getDistance(DistanceUnit.CM);
+        while(!(hsvValues[0] < 30 || hsvValues[0] > 330)) {
+            leftFrontMotor.setPower(power);
+            leftRearMotor.setPower(power);
+            rightFrontMotor.setPower(power);
+            rightRearMotor.setPower(power);
 
-            while (distance > 3.5) {
+            telemetry.addData("Alpha", sensorColor.alpha());
+            telemetry.addData("Red  ", sensorColor.red());
+            telemetry.addData("Green", sensorColor.green());
+            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
+            telemetry.update();
 
-                if (sensorTouch.getState() == false) {
-                    break;
-                }
+            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                    (int) (sensorColor.green() * SCALE_FACTOR),
+                    (int) (sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
 
-                power = (Math.pow(1.05, distance) - 1) / (Math.pow(1.05, distance) + 1);
-                if (power > maxpower) power = maxpower;
-                if (power < 0) power = 0;
+        }
 
-                leftFrontMotor.setPower(power);
-                leftRearMotor.setPower(power);
-                rightFrontMotor.setPower(power);
-                rightRearMotor.setPower(power);
+        leftFrontMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        rightRearMotor.setPower(0);
 
-                telemetry.addData("Postition", robotpos);
-                telemetry.addData("Power", power);
-                telemetry.addData("Dist", distance);
-                telemetry.addData("Pressed", sensorTouch.getState());
-                telemetry.update();
+        leftFrontMotor.setPower(0.2);
+        leftRearMotor.setPower(0.2);
+        rightFrontMotor.setPower(0.2);
+        rightRearMotor.setPower(0.2);
 
-                distance = sensorDistance.getDistance(DistanceUnit.CM);
-            }
+        sleep(1000);
 
-            switch (robotpos){
-                case -1:
-                    moveRight(1);
-                    distance = sensorDistance.getDistance(DistanceUnit.CM);
-                    if (distance < 5) moveRight(1);
-                    break;
-                case 0:
-                    moveLeft(1);
-                    distance = sensorDistance.getDistance(DistanceUnit.CM);
-                    if (distance < 5) {
-                        moveRight(2);
-                    }
-                    break;
-                case 1:
-                    moveLeft(1);
-                    distance = sensorDistance.getDistance(DistanceUnit.CM);
-                    if (distance < 5) moveLeft(1);
-                    break;
-            }
+        leftFrontMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        rightRearMotor.setPower(0);
+
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        while(!(hsvValues[0] < 250 || hsvValues[0] > 210)) {
+            leftFrontMotor.setPower(power);
+            leftRearMotor.setPower(power);
+            rightFrontMotor.setPower(power);
+            rightRearMotor.setPower(power);
+
+            telemetry.addData("Alpha", sensorColor.alpha());
+            telemetry.addData("Red  ", sensorColor.red());
+            telemetry.addData("Green", sensorColor.green());
+            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
+            telemetry.update();
+
+            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                    (int) (sensorColor.green() * SCALE_FACTOR),
+                    (int) (sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
 
         }
 

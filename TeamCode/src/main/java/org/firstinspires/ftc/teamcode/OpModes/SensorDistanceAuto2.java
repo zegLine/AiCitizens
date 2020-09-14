@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
 import android.util.Log;
 import android.util.LogPrinter;
@@ -53,8 +53,8 @@ import java.util.logging.Logger;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Sensor Distance Autos 3")
-public class SensorDistanceAuto3 extends LinearOpMode {
+@Autonomous(name = "Sensor Distance Autos 2", group = "Sensor")
+public class SensorDistanceAuto2 extends LinearOpMode {
 
     ColorSensor sensorColor;
     DistanceSensor sensorCDistance;
@@ -70,12 +70,9 @@ public class SensorDistanceAuto3 extends LinearOpMode {
     final float values[] = hsvValues;
     final double SCALE_FACTOR = 150;
 
-    //double maxpower = 0.5;
-    //double power;
+    double maxpower = 0.5;
+    double power;
     double manouverpower = 0.3;
-    double distance;
-    final int tileSize = 24; //INCHES
-    int fieldLength = 5; //TILES, NOT INCLUDING FIRST ONE
 
     int robotpos = 0;
     //Move to the right the given amount of tiles
@@ -97,15 +94,6 @@ public class SensorDistanceAuto3 extends LinearOpMode {
         rightFrontMotor.setPower(manouverpower);
         rightRearMotor.setPower(-manouverpower);
         sleep(tiles * 2000);
-    }
-    //Move forward the given amount of tiles
-    public void moveForward() {
-        System.out.println("Move forward...");
-        leftFrontMotor.setPower(manouverpower);
-        leftRearMotor.setPower(manouverpower);
-        rightFrontMotor.setPower(manouverpower);
-        rightRearMotor.setPower(manouverpower);
-        sleep(2000);
     }
 
     @Override
@@ -129,60 +117,50 @@ public class SensorDistanceAuto3 extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            distance = sensorDistance.getDistance(DistanceUnit.INCH);
-            //Cat timp mai avem patrate de parcurs
-            while(fieldLength > 0) {
-                //Cat timp distanta este mai mare decat dimensiunea unui patrat
-                while (distance > tileSize) {
-                    //Robotul se deplaseaza o distanta egala cu dimensiunea unui patrat
-                    moveForward();
-                    //Micsoram distanta totala de parcurs cu 1 patrat
-                    fieldLength -= 1;
-                    //Daca atinge un obstacol, iesim din loop si schimbam linia de miscare
-                    if (sensorTouch.getState() == false) {
-                        break;
+            double distance = sensorDistance.getDistance(DistanceUnit.CM);
+
+            while (distance > 3.5) {
+
+                if (sensorTouch.getState() == false) {
+                    break;
+                }
+
+                power = (Math.pow(1.05, distance) - 1) / (Math.pow(1.05, distance) + 1);
+                if (power > maxpower) power = maxpower;
+                if (power < 0) power = 0;
+
+                leftFrontMotor.setPower(power);
+                leftRearMotor.setPower(power);
+                rightFrontMotor.setPower(power);
+                rightRearMotor.setPower(power);
+
+                telemetry.addData("Postition", robotpos);
+                telemetry.addData("Power", power);
+                telemetry.addData("Dist", distance);
+                telemetry.addData("Pressed", sensorTouch.getState());
+                telemetry.update();
+
+                distance = sensorDistance.getDistance(DistanceUnit.CM);
+            }
+
+            switch (robotpos){
+                case -1:
+                    moveRight(1);
+                    distance = sensorDistance.getDistance(DistanceUnit.CM);
+                    if (distance < 5) moveRight(1);
+                    break;
+                case 0:
+                    moveLeft(1);
+                    distance = sensorDistance.getDistance(DistanceUnit.CM);
+                    if (distance < 5) {
+                        moveRight(2);
                     }
-
-
-                    telemetry.addData("Postition", robotpos);
-                    telemetry.addData("Power", manouverpower);
-                    telemetry.addData("Dist", distance);
-                    telemetry.addData("Pressed", sensorTouch.getState());
-                    telemetry.update();
-                    //Recalculam distanta
-                    distance = sensorDistance.getDistance(DistanceUnit.INCH);
-                }
-                //Oprim motoarele pentru 250ms dupa iesirea din loop
-
-                leftFrontMotor.setPower(0);
-                leftRearMotor.setPower(0);
-                rightFrontMotor.setPower(0);
-                rightRearMotor.setPower(0);
-                sleep(250);
-                //Schimbam linia de miscare
-                switch (robotpos) {
-                    case -1:
-                        moveRight(1);
-                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
-                        if (distance < tileSize) {
-                            moveRight(1);
-                        }
-                        break;
-                    case 0:
-                        moveLeft(1);
-                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
-                        if (distance < tileSize) {
-                            moveRight(2);
-                        }
-                        break;
-                    case 1:
-                        moveLeft(1);
-                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
-                        if (distance < tileSize) {
-                            moveLeft(1);
-                        }
-                        break;
-                }
+                    break;
+                case 1:
+                    moveLeft(1);
+                    distance = sensorDistance.getDistance(DistanceUnit.CM);
+                    if (distance < 5) moveLeft(1);
+                    break;
             }
 
         }

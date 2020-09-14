@@ -27,9 +27,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
-import android.graphics.Color;
+import android.util.Log;
+import android.util.LogPrinter;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -38,10 +39,10 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.logging.Logger;
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -52,8 +53,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Sensor Distance Autos", group = "Sensor")
-public class SensorDistaneAuto extends LinearOpMode {
+@Autonomous(name = "Sensor Distance Autos 3")
+public class SensorDistanceAuto3 extends LinearOpMode {
 
     ColorSensor sensorColor;
     DistanceSensor sensorCDistance;
@@ -69,9 +70,43 @@ public class SensorDistaneAuto extends LinearOpMode {
     final float values[] = hsvValues;
     final double SCALE_FACTOR = 150;
 
-    double maxpower = 0.5;
-    double power;
+    //double maxpower = 0.5;
+    //double power;
     double manouverpower = 0.3;
+    double distance;
+    final int tileSize = 24; //INCHES
+    int fieldLength = 5; //TILES, NOT INCLUDING FIRST ONE
+
+    int robotpos = 0;
+    //Move to the right the given amount of tiles
+    public void moveRight(int tiles) {
+        System.out.println("Move right...");
+        robotpos += tiles;
+        leftFrontMotor.setPower(manouverpower);
+        leftRearMotor.setPower(-manouverpower);
+        rightFrontMotor.setPower(-manouverpower);
+        rightRearMotor.setPower(manouverpower);
+        sleep(tiles * 2000);
+    }
+    //Move to the left the given amount of tiles
+    public void moveLeft(int tiles) {
+        System.out.println("Move left...");
+        robotpos -= tiles;
+        leftFrontMotor.setPower(-manouverpower);
+        leftRearMotor.setPower(manouverpower);
+        rightFrontMotor.setPower(manouverpower);
+        rightRearMotor.setPower(-manouverpower);
+        sleep(tiles * 2000);
+    }
+    //Move forward the given amount of tiles
+    public void moveForward() {
+        System.out.println("Move forward...");
+        leftFrontMotor.setPower(manouverpower);
+        leftRearMotor.setPower(manouverpower);
+        rightFrontMotor.setPower(manouverpower);
+        rightRearMotor.setPower(manouverpower);
+        sleep(2000);
+    }
 
     @Override
     public void runOpMode() {
@@ -94,80 +129,63 @@ public class SensorDistaneAuto extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            double distance = sensorDistance.getDistance(DistanceUnit.CM);
+            distance = sensorDistance.getDistance(DistanceUnit.INCH);
+            //Cat timp mai avem patrate de parcurs
+            while(fieldLength > 0) {
+                //Cat timp distanta este mai mare decat dimensiunea unui patrat
+                while (distance > tileSize) {
+                    //Robotul se deplaseaza o distanta egala cu dimensiunea unui patrat
+                    moveForward();
+                    //Micsoram distanta totala de parcurs cu 1 patrat
+                    fieldLength -= 1;
+                    //Daca atinge un obstacol, iesim din loop si schimbam linia de miscare
+                    if (sensorTouch.getState() == false) {
+                        break;
+                    }
 
-            while (distance > 3.5) {
 
-                if (sensorTouch.getState() == false) {
-                    break;
+                    telemetry.addData("Postition", robotpos);
+                    telemetry.addData("Power", manouverpower);
+                    telemetry.addData("Dist", distance);
+                    telemetry.addData("Pressed", sensorTouch.getState());
+                    telemetry.update();
+                    //Recalculam distanta
+                    distance = sensorDistance.getDistance(DistanceUnit.INCH);
                 }
+                //Oprim motoarele pentru 250ms dupa iesirea din loop
 
-                power = (Math.pow(1.05, distance) - 1) / (Math.pow(1.05, distance) + 1);
-                if (power > maxpower) power = maxpower;
-                if (power < 0) power = 0;
-
-                leftFrontMotor.setPower(power);
-                leftRearMotor.setPower(power);
-                rightFrontMotor.setPower(power);
-                rightRearMotor.setPower(power);
-
-                telemetry.addData("Power", power);
-                telemetry.addData("Dist", distance);
-                telemetry.addData("Pressed", sensorTouch.getState());
-                telemetry.update();
-
-                distance = sensorDistance.getDistance(DistanceUnit.CM);
-            }
-
-            //LEFT
-            leftFrontMotor.setPower(-manouverpower);
-            leftRearMotor.setPower(manouverpower);
-            rightFrontMotor.setPower(manouverpower);
-            rightRearMotor.setPower(-manouverpower);
-            sleep(2000);
-
-            distance = sensorDistance.getDistance(DistanceUnit.CM);
-            if (distance < 10) {
-                //RIGHT 2 BLOCKS
-                leftFrontMotor.setPower(manouverpower);
-                leftRearMotor.setPower(-manouverpower);
-                rightFrontMotor.setPower(-manouverpower);
-                rightRearMotor.setPower(manouverpower);
-                sleep(4000);
-
-                //FRONT
-                leftFrontMotor.setPower(manouverpower);
-                leftRearMotor.setPower(manouverpower);
-                rightFrontMotor.setPower(manouverpower);
-                rightRearMotor.setPower(manouverpower);
-                sleep(2200);
-
-                //LEFT
-                leftFrontMotor.setPower(-manouverpower);
-                leftRearMotor.setPower(manouverpower);
-                rightFrontMotor.setPower(manouverpower);
-                rightRearMotor.setPower(-manouverpower);
-                sleep(2000);
-
-            } else {
-                //FRONT
-                leftFrontMotor.setPower(manouverpower);
-                leftRearMotor.setPower(manouverpower);
-                rightFrontMotor.setPower(manouverpower);
-                rightRearMotor.setPower(manouverpower);
-                sleep(2200);
-
-                //RIGHT
-                leftFrontMotor.setPower(manouverpower);
-                leftRearMotor.setPower(-manouverpower);
-                rightFrontMotor.setPower(-manouverpower);
-                rightRearMotor.setPower(manouverpower);
-                sleep(2000);
+                leftFrontMotor.setPower(0);
+                leftRearMotor.setPower(0);
+                rightFrontMotor.setPower(0);
+                rightRearMotor.setPower(0);
+                sleep(250);
+                //Schimbam linia de miscare
+                switch (robotpos) {
+                    case -1:
+                        moveRight(1);
+                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
+                        if (distance < tileSize) {
+                            moveRight(1);
+                        }
+                        break;
+                    case 0:
+                        moveLeft(1);
+                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
+                        if (distance < tileSize) {
+                            moveRight(2);
+                        }
+                        break;
+                    case 1:
+                        moveLeft(1);
+                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
+                        if (distance < tileSize) {
+                            moveLeft(1);
+                        }
+                        break;
+                }
             }
 
         }
-
-
 
         telemetry.addData("Alpha", sensorColor.alpha());
         telemetry.addData("Red  ", sensorColor.red());
