@@ -19,11 +19,14 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -33,35 +36,51 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@TeleOp
+@TeleOp(name="Detection", group="Tests")
 public class OpenCV extends LinearOpMode
 {
-    OpenCvInternalCamera phoneCam;
-    SkystoneDeterminationPipeline pipeline;
+    private DcMotor leftFrontMotor = null;
+    private DcMotor rightFrontMotor = null;
+    private DcMotor leftRearMotor = null;
+    private DcMotor rightRearMotor = null;
+    OpenCvCamera webcam;
+    RingDeterminationPipeLine pipeline;
+
+    public void initializeAll() {
+        // Initialize motors
+        leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
+        rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
+        leftRearMotor = hardwareMap.dcMotor.get("leftRearMotor");
+        rightRearMotor = hardwareMap.dcMotor.get("rightRearMotor");
+
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
+    }
 
     @Override
     public void runOpMode()
     {
-
+        initializeAll();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        pipeline = new SkystoneDeterminationPipeline();
-        phoneCam.setPipeline(pipeline);
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"), cameraMonitorViewId);
+        pipeline = new RingDeterminationPipeLine();
+        webcam.setPipeline(pipeline);
 
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
         // landscape orientation, though.
-        phoneCam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+        //webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
-        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                phoneCam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                webcam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
             }
         });
 
@@ -69,6 +88,23 @@ public class OpenCV extends LinearOpMode
 
         while (opModeIsActive())
         {
+            /*if(pipeline.position == RingDeterminationPipeLine.RingPosition.FOUR) {
+                leftFrontMotor.setPower(-1);
+                leftRearMotor.setPower(-1);
+                rightFrontMotor.setPower(-1);
+                rightRearMotor.setPower(-1);
+            } else if (pipeline.position == RingDeterminationPipeLine.RingPosition.NONE) {
+                leftFrontMotor.setPower(0);
+                leftRearMotor.setPower(0);
+                rightFrontMotor.setPower(0);
+                rightRearMotor.setPower(0);
+            } else if(pipeline.position == RingDeterminationPipeLine.RingPosition.ONE) {
+                leftFrontMotor.setPower(1);
+                leftRearMotor.setPower(-1);
+                rightFrontMotor.setPower(-1);
+                rightRearMotor.setPower(1);
+            }
+            */
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
             telemetry.update();
@@ -78,7 +114,7 @@ public class OpenCV extends LinearOpMode
         }
     }
 
-    public static class SkystoneDeterminationPipeline extends OpenCvPipeline
+    public static class RingDeterminationPipeLine extends OpenCvPipeline
     {
         /*
          * An enum to define the skystone position
