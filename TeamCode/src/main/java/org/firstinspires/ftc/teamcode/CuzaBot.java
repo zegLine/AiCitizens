@@ -15,10 +15,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //Clasa adaugata pentru a implementa o singura data fiecare piesa adaugata pe robot
 
 public class CuzaBot  {
-    public DcMotor leftMotorFront = null;
-    public DcMotor leftMotorBack = null;
-    public DcMotor rightMotorFront = null;
-    public DcMotor rightMotorBack = null;
+    private DcMotor leftMotorFront = null;
+    private DcMotor leftMotorBack = null;
+    private DcMotor rightMotorFront = null;
+    private DcMotor rightMotorBack = null;
     public DcMotor launchMotor = null;
 
     public ElapsedTime runtime = new ElapsedTime();
@@ -59,4 +59,12 @@ public class CuzaBot  {
         ColorSensor = hwMap.get(ColorSensor.class,"ColorSensor");
         DistanceSensor = hwMap.get(Rev2mDistanceSensor.class, "DistanceSensor");
     }
+
+    public void powerMotors(double leftMotorFrontPow, double leftMotorBackPow, double rightMotorFrontPow, double rightMotorBackPow) {
+        leftMotorFront.setPower(leftMotorFrontPow);
+        leftMotorBack.setPower(leftMotorBackPow);
+        rightMotorFront.setPower(rightMotorFrontPow);
+        rightMotorBack.setPower(rightMotorBackPow);
+    }
+
 }

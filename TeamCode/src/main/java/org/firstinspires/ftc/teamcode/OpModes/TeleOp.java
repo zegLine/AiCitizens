@@ -86,10 +86,7 @@ public class TeleOp extends LinearOpMode {
             LR = Math.max(-motorMax, Math.min(LR, motorMax));
             RR = Math.max(-motorMax, Math.min(RR, motorMax));
 
-            robot.leftMotorFront.setPower(LF);
-            robot.rightMotorFront.setPower(RF);
-            robot.leftMotorBack.setPower(LR);
-            robot.rightMotorBack.setPower(RR);
+            robot.powerMotors(LF, LR, RF, RR);
 
             // Show telemetry info
             telemetry.addData("Status", "Run Time: " + robot.runtime.toString());
