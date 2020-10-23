@@ -49,6 +49,7 @@ public class OpenCV extends LinearOpMode
     RingDeterminationPipeLine pipeline;
 
     public void initializeAll() {
+        /*
         // Initialize motors
         leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
         rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
@@ -59,6 +60,8 @@ public class OpenCV extends LinearOpMode
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
         rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
+        */
+
     }
 
     @Override
