@@ -57,8 +57,6 @@ import java.util.logging.Logger;
 public class SensorDistanceAuto3 extends LinearOpMode {
 
     ColorSensor sensorColor;
-    DistanceSensor sensorCDistance;
-    DigitalChannel sensorTouch;
     Rev2mDistanceSensor sensorDistance;
 
     private DcMotor leftFrontMotor = null;
@@ -111,8 +109,6 @@ public class SensorDistanceAuto3 extends LinearOpMode {
     @Override
     public void runOpMode() {
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorCDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
-        sensorTouch = hardwareMap.get(DigitalChannel.class, "sensor_touch");
         sensorDistance = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_distance");
 
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
@@ -120,10 +116,10 @@ public class SensorDistanceAuto3 extends LinearOpMode {
         leftRearMotor = hardwareMap.dcMotor.get("leftRear");
         rightRearMotor = hardwareMap.dcMotor.get("rightRear");
 
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftRearMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightRearMotor.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
 
@@ -139,15 +135,10 @@ public class SensorDistanceAuto3 extends LinearOpMode {
                     //Micsoram distanta totala de parcurs cu 1 patrat
                     fieldLength -= 1;
                     //Daca atinge un obstacol, iesim din loop si schimbam linia de miscare
-                    if (sensorTouch.getState() == false) {
-                        break;
-                    }
-
 
                     telemetry.addData("Postition", robotpos);
                     telemetry.addData("Power", manouverpower);
                     telemetry.addData("Dist", distance);
-                    telemetry.addData("Pressed", sensorTouch.getState());
                     telemetry.update();
                     //Recalculam distanta
                     distance = sensorDistance.getDistance(DistanceUnit.INCH);
