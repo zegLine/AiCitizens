@@ -99,10 +99,10 @@ public class SensorDistanceAuto3 extends LinearOpMode {
     //Move forward the given amount of tiles
     public void moveForward() {
         System.out.println("Move forward...");
-        leftFrontMotor.setPower(-manouverpower);
-        leftRearMotor.setPower(-manouverpower);
-        rightFrontMotor.setPower(-manouverpower);
-        rightRearMotor.setPower(-manouverpower);
+        leftFrontMotor.setPower(manouverpower);
+        leftRearMotor.setPower(manouverpower);
+        rightFrontMotor.setPower(manouverpower);
+        rightRearMotor.setPower(manouverpower);
         sleep(2000);
     }
 
@@ -116,16 +116,16 @@ public class SensorDistanceAuto3 extends LinearOpMode {
         leftRearMotor = hardwareMap.dcMotor.get("leftRear");
         rightRearMotor = hardwareMap.dcMotor.get("rightRear");
 
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftRearMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightRearMotor.setDirection(DcMotor.Direction.REVERSE);
+
         waitForStart();
 
         while(opModeIsActive()) {
+
             distance = sensorDistance.getDistance(DistanceUnit.INCH);
-            telemetry.addData("Distanta: ",distance);
-            telemetry.update();
             //Cat timp mai avem patrate de parcurs
             while(fieldLength > 0) {
                 //Cat timp distanta este mai mare decat dimensiunea unui patrat
@@ -133,7 +133,7 @@ public class SensorDistanceAuto3 extends LinearOpMode {
                     //Robotul se deplaseaza o distanta egala cu dimensiunea unui patrat
                     moveForward();
                     //Micsoram distanta totala de parcurs cu 1 patrat
-                    //fieldLength -= 1;
+                    fieldLength -= 1;
                     //Daca atinge un obstacol, iesim din loop si schimbam linia de miscare
 
                     telemetry.addData("Postition", robotpos);
@@ -177,6 +177,13 @@ public class SensorDistanceAuto3 extends LinearOpMode {
             }
 
         }
+
+        telemetry.addData("Alpha", sensorColor.alpha());
+        telemetry.addData("Red  ", sensorColor.red());
+        telemetry.addData("Green", sensorColor.green());
+        telemetry.addData("Blue ", sensorColor.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+        telemetry.update();
 
     }
 }
