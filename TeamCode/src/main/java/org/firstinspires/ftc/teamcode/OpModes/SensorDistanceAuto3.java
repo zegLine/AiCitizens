@@ -56,7 +56,6 @@ import java.util.logging.Logger;
 @Autonomous(name = "Sensor Distance Autos 3")
 public class SensorDistanceAuto3 extends LinearOpMode {
 
-    ColorSensor sensorColor;
     Rev2mDistanceSensor sensorDistance;
 
     private DcMotor leftFrontMotor = null;
@@ -71,9 +70,10 @@ public class SensorDistanceAuto3 extends LinearOpMode {
     //double maxpower = 0.5;
     //double power;
     double manouverpower = 0.3;
+    double manouverpower2 = 0.31;
     double distance;
-    final int tileSize = 24; //INCHES
-    int fieldLength = 5; //TILES, NOT INCLUDING FIRST ONE
+    final int tileSize = 3; //INCHES
+    int fieldLength = 64; //TILES, NOT INCLUDING FIRST ONE
 
     int robotpos = 0;
     //Move to the right the given amount of tiles
@@ -84,7 +84,8 @@ public class SensorDistanceAuto3 extends LinearOpMode {
         leftRearMotor.setPower(-manouverpower);
         rightFrontMotor.setPower(-manouverpower);
         rightRearMotor.setPower(manouverpower);
-        sleep(tiles * 2000);
+        sleep(tiles * 4500);
+        distance = sensorDistance.getDistance(DistanceUnit.INCH);
     }
     //Move to the left the given amount of tiles
     public void moveLeft(int tiles) {
@@ -94,21 +95,23 @@ public class SensorDistanceAuto3 extends LinearOpMode {
         leftRearMotor.setPower(manouverpower);
         rightFrontMotor.setPower(manouverpower);
         rightRearMotor.setPower(-manouverpower);
-        sleep(tiles * 2000);
+        sleep(tiles * 4500);
+        distance = sensorDistance.getDistance(DistanceUnit.INCH);
     }
     //Move forward the given amount of tiles
-    public void moveForward() {
+    public void moveForward(int tiles) {
         System.out.println("Move forward...");
         leftFrontMotor.setPower(manouverpower);
         leftRearMotor.setPower(manouverpower);
         rightFrontMotor.setPower(manouverpower);
         rightRearMotor.setPower(manouverpower);
-        sleep(2000);
+        sleep(tiles*285);
+        fieldLength--;
+        distance = sensorDistance.getDistance(DistanceUnit.INCH);
     }
 
     @Override
     public void runOpMode() {
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hardwareMap.get(Rev2mDistanceSensor.class, "sensor_distance");
 
         leftFrontMotor = hardwareMap.dcMotor.get("leftFront");
@@ -125,65 +128,121 @@ public class SensorDistanceAuto3 extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            distance = sensorDistance.getDistance(DistanceUnit.INCH);
-            //Cat timp mai avem patrate de parcurs
-            while(fieldLength > 0) {
-                //Cat timp distanta este mai mare decat dimensiunea unui patrat
-                while (distance > tileSize) {
-                    //Robotul se deplaseaza o distanta egala cu dimensiunea unui patrat
-                    moveForward();
-                    //Micsoram distanta totala de parcurs cu 1 patrat
-                    fieldLength -= 1;
-                    //Daca atinge un obstacol, iesim din loop si schimbam linia de miscare
-
+            if(fieldLength > 0) {
+                distance = sensorDistance.getDistance(DistanceUnit.INCH);
+                if(distance > tileSize) {
                     telemetry.addData("Postition", robotpos);
-                    telemetry.addData("Power", manouverpower);
+                    telemetry.addData("fieldSize", fieldLength);
                     telemetry.addData("Dist", distance);
                     telemetry.update();
-                    //Recalculam distanta
-                    distance = sensorDistance.getDistance(DistanceUnit.INCH);
+                    moveForward(1);
+                } else {
+                    telemetry.addData("Postition", robotpos);
+                    telemetry.addData("fieldSize", fieldLength);
+                    telemetry.addData("Dist", distance);
+                    telemetry.update();
+                    //Schimbam linia de miscare
+                    switch (robotpos) {
+                        case -1:
+                            moveRight(1);
+                            leftFrontMotor.setPower(0);
+                            leftRearMotor.setPower(0);
+                            rightFrontMotor.setPower(0);
+                            rightRearMotor.setPower(0);
+                            sleep(500);
+                            telemetry.addData("Postition", robotpos);
+                            telemetry.addData("fieldSize", fieldLength);
+                            telemetry.addData("Dist", distance);
+                            telemetry.update();
+                            if (distance < tileSize) {
+                                moveRight(1);
+                                leftFrontMotor.setPower(0);
+                                leftRearMotor.setPower(0);
+                                rightFrontMotor.setPower(0);
+                                rightRearMotor.setPower(0);
+                                sleep(500);
+                                telemetry.addData("Postition", robotpos);
+                                telemetry.addData("fieldSize", fieldLength);
+                                telemetry.addData("Dist", distance);
+                                telemetry.update();
+                            }
+                            break;
+                        case 0:
+                            moveLeft(1);
+                            leftFrontMotor.setPower(0);
+                            leftRearMotor.setPower(0);
+                            rightFrontMotor.setPower(0);
+                            rightRearMotor.setPower(0);
+                            sleep(500);
+                            telemetry.addData("Postition", robotpos);
+                            telemetry.addData("fieldSize", fieldLength);
+                            telemetry.addData("Dist", distance);
+                            telemetry.update();
+                            if (distance < tileSize) {
+                                moveRight(2);
+                                leftFrontMotor.setPower(0);
+                                leftRearMotor.setPower(0);
+                                rightFrontMotor.setPower(0);
+                                rightRearMotor.setPower(0);
+                                sleep(500);
+                                telemetry.addData("Postition", robotpos);
+                                telemetry.addData("fieldSize", fieldLength);
+                                telemetry.addData("Dist", distance);
+                                telemetry.update();
+                            }
+                            break;
+                        case 1:
+                            moveLeft(1);
+                            leftFrontMotor.setPower(0);
+                            leftRearMotor.setPower(0);
+                            rightFrontMotor.setPower(0);
+                            rightRearMotor.setPower(0);
+                            sleep(500);
+                            telemetry.addData("Postition", robotpos);
+                            telemetry.addData("fieldSize", fieldLength);
+                            telemetry.addData("Dist", distance);
+                            telemetry.update();
+                            if (distance < tileSize) {
+                                moveLeft(1);
+                                leftFrontMotor.setPower(0);
+                                leftRearMotor.setPower(0);
+                                rightFrontMotor.setPower(0);
+                                rightRearMotor.setPower(0);
+                                sleep(500);
+                                telemetry.addData("Postition", robotpos);
+                                telemetry.addData("fieldSize", fieldLength);
+                                telemetry.addData("Dist", distance);
+                                telemetry.update();
+                            }
+                            break;
+                    }
                 }
-                //Oprim motoarele pentru 250ms dupa iesirea din loop
-
+            }
+            else {
                 leftFrontMotor.setPower(0);
                 leftRearMotor.setPower(0);
                 rightFrontMotor.setPower(0);
                 rightRearMotor.setPower(0);
-                sleep(250);
-                //Schimbam linia de miscare
-                switch (robotpos) {
+                sleep(500);
+                switch (robotpos){
                     case -1:
                         moveRight(1);
-                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
-                        if (distance < tileSize) {
-                            moveRight(1);
-                        }
-                        break;
-                    case 0:
-                        moveLeft(1);
-                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
-                        if (distance < tileSize) {
-                            moveRight(2);
-                        }
+                        leftFrontMotor.setPower(0);
+                        leftRearMotor.setPower(0);
+                        rightFrontMotor.setPower(0);
+                        rightRearMotor.setPower(0);
                         break;
                     case 1:
                         moveLeft(1);
-                        distance = sensorDistance.getDistance(DistanceUnit.INCH);
-                        if (distance < tileSize) {
-                            moveLeft(1);
-                        }
+                        leftFrontMotor.setPower(0);
+                        leftRearMotor.setPower(0);
+                        rightFrontMotor.setPower(0);
+                        rightRearMotor.setPower(0);
                         break;
                 }
             }
 
         }
-
-        telemetry.addData("Alpha", sensorColor.alpha());
-        telemetry.addData("Red  ", sensorColor.red());
-        telemetry.addData("Green", sensorColor.green());
-        telemetry.addData("Blue ", sensorColor.blue());
-        telemetry.addData("Hue", hsvValues[0]);
-        telemetry.update();
 
     }
 }

@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.CuzaBot;
-
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOperare", group="Linear Opmode")
 public class TeleOp extends LinearOpMode {
     // Declare OpMode members.
     CuzaBot robot = new CuzaBot();
@@ -35,17 +35,20 @@ public class TeleOp extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         robot.runtime.reset();
-        robot.ColorSensor.enableLed(false);
+        //robot.ColorSensor.enableLed(false);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             //Activam sistemul de lansare cu rightbumper
+            /*
             if(gamepad2.right_bumper) {
                 robot.launchMotor.setPower(motorMax);
             } else {
                 robot.launchMotor.setPower(0);
             }
+
+             */
 
             // Initialize speeds
             LF = 0;
