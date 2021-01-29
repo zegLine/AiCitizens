@@ -1,30 +1,7 @@
-/*
- * Copyright (c) 2020 OpenFTC Team
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+package org.firstinspires.ftc.teamcode.Systems.Vision;
 
-package org.firstinspires.ftc.teamcode.OpModes;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
@@ -39,35 +16,14 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @TeleOp(name="Detection", group="Tests")
-public class OpenCV extends LinearOpMode
+public class EasyOpenVision
 {
-    private DcMotor leftFrontMotor = null;
-    private DcMotor rightFrontMotor = null;
-    private DcMotor leftRearMotor = null;
-    private DcMotor rightRearMotor = null;
-    OpenCvCamera webcam;
-    RingDeterminationPipeLine pipeline;
+    private static OpenCvCamera webcam;
+    private static RingDeterminationPipeLine pipeline;
+    static final int STREAM_WIDTH = 320;
+    static final int STREAM_HEIGHT = 240;
 
-    public void initializeAll() {
-        /*
-        // Initialize motors
-        leftFrontMotor = hardwareMap.dcMotor.get("leftFrontMotor");
-        rightFrontMotor = hardwareMap.dcMotor.get("rightFrontMotor");
-        leftRearMotor = hardwareMap.dcMotor.get("leftRearMotor");
-        rightRearMotor = hardwareMap.dcMotor.get("rightRearMotor");
-
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftRearMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightRearMotor.setDirection(DcMotor.Direction.FORWARD);
-        */
-
-    }
-
-    @Override
-    public void runOpMode()
-    {
-        initializeAll();
+    public static void initEasyVision(HardwareMap hardwareMap) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam"), cameraMonitorViewId);
         pipeline = new RingDeterminationPipeLine();
@@ -83,38 +39,24 @@ public class OpenCV extends LinearOpMode
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                webcam.startStreaming(STREAM_WIDTH,STREAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
             }
         });
+    }
 
-        waitForStart();
+    public static int getDetectedPosition() {
+        int mainPosition;
+        RingDeterminationPipeLine.RingPosition position = pipeline.position;
 
-        while (opModeIsActive())
-        {
-            /*if(pipeline.position == RingDeterminationPipeLine.RingPosition.FOUR) {
-                leftFrontMotor.setPower(-1);
-                leftRearMotor.setPower(-1);
-                rightFrontMotor.setPower(-1);
-                rightRearMotor.setPower(-1);
-            } else if (pipeline.position == RingDeterminationPipeLine.RingPosition.NONE) {
-                leftFrontMotor.setPower(0);
-                leftRearMotor.setPower(0);
-                rightFrontMotor.setPower(0);
-                rightRearMotor.setPower(0);
-            } else if(pipeline.position == RingDeterminationPipeLine.RingPosition.ONE) {
-                leftFrontMotor.setPower(1);
-                leftRearMotor.setPower(-1);
-                rightFrontMotor.setPower(-1);
-                rightRearMotor.setPower(1);
-            }
-            */
-            telemetry.addData("Analysis", pipeline.getAnalysis());
-            telemetry.addData("Position", pipeline.position);
-            telemetry.update();
-
-            // Don't burn CPU cycles busy-looping in this sample
-            sleep(50);
+        if(position == RingDeterminationPipeLine.RingPosition.NONE) {
+            mainPosition = 1;
+        } else if(position == RingDeterminationPipeLine.RingPosition.ONE) {
+            mainPosition = 2;
+        } else {
+            mainPosition = 3;
         }
+
+        return mainPosition;
     }
 
     public static class RingDeterminationPipeLine extends OpenCvPipeline
@@ -138,10 +80,11 @@ public class OpenCV extends LinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98);
 
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
+        //181, 98
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point((EasyOpenVision.STREAM_WIDTH -  REGION_WIDTH)/2,(EasyOpenVision.STREAM_HEIGHT - REGION_HEIGHT)/2);
 
         final int FOUR_RING_THRESHOLD = 150;
         final int ONE_RING_THRESHOLD = 135;

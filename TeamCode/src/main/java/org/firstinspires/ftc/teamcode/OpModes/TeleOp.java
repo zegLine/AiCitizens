@@ -98,7 +98,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("RF", "%.3f", RF);
             telemetry.addData("LR", "%.3f", LR);
             telemetry.addData("RR", "%.3f", RR);
-            telemetry.addData("Distance:", robot.DistanceSensor.getDistance(DistanceUnit.CM));
+            //telemetry.addData("Distance:", robot.DistanceSensor.getDistance(DistanceUnit.CM));
 
             telemetry.update();
         }
